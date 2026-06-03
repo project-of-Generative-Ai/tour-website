@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Confirm Payment | Pakistan Road Trips</title>
+  <meta name="description"
+    content="Upload your bank transfer or JazzCash receipt to verify your tour booking with Pakistan Road Trips." />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="booking.css" />
+</head>
+
+<body>
+  <div class="video-background">
+    <video autoplay loop muted playsinline>
+      <source src="pics/background.mp4" type="video/mp4">
+    </video>
+  </div>
+  <header>
+    <div class="top-bar">
+      <span>info@pakistanroadtrips.pk | 03000000000</span>
+    </div>
+    <nav class="navbar">
+      <h1><a href="index.html">Pakistan Road Trips</a></h1>
+      <div class="menu-toggle" id="menu-toggle" aria-expanded="false"></div>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="activity.html">Activity</a></li>
+        <li><a href="tour.html">Tours</a></li>
+        <li><a href="packages.html">Tour Packages</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="confirm-payment.html">Confirm Payment</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <section class="page-form-section">
+    <h2>Confirm Payment</h2>
+    <p class="form-hint">
+      After reserving your seat, transfer the amount using the bank details sent to your email or WhatsApp.
+      Upload your payment screenshot here (max 5 MB). Use the Booking ID from your confirmation message (e.g.
+      PKR-123456).
+    </p>
+    <form id="paymentUploadForm">
+      <div class="form-group">
+        <label for="payBookingId">Booking ID *</label>
+        <input type="text" id="payBookingId" placeholder="e.g., PKR-123456" required pattern="PKR-[0-9]{6}"
+          title="Format: PKR- followed by 6 digits" />
+      </div>
+      <div class="form-group">
+        <label for="receiptFile">Upload Screenshot of Bank Transfer / JazzCash Receipt *</label>
+        <input type="file" id="receiptFile" accept="image/*,application/pdf" required />
+      </div>
+      <button type="submit" id="paySubmitBtn" class="btn-submit">Submit Proof of Payment</button>
+    </form>
+  </section>
+
+  <footer>
+    <h4>Contact Info</h4>
+    <p>info@pakistanroadtrips.pk | WhatsApp: 03000000000</p>
+    <p>&copy; 2023 pakistanroadtrips.pk All Rights Reserved.</p>
+  </footer>
+
+  <script src="automation-config.js"></script>
+  <script src="booking.js"></script>
+  <script src="script.js"></script>
+</body>
+
+</html>
