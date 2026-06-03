@@ -26,8 +26,8 @@
       left: 0;
       min-width: 220px;
       background: rgba(15, 23, 42, 0.97);
-      backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 12px;
       box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
@@ -136,8 +136,8 @@
 
     .tour-card {
       background: rgba(15, 23, 42, 0.6);
-      backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
+      backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.08);
       border-radius: 16px;
       overflow: hidden;
@@ -152,21 +152,9 @@
     .tour-card-img {
       width: 100%;
       height: 220px;
-      background: rgba(255, 255, 255, 0.04);
+      object-fit: cover;
+      display: block;
       border-bottom: 1px solid rgba(255, 255, 255, 0.06);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      flex-direction: column;
-      gap: 8px;
-      color: #94a3b8;
-      font-size: 0.85rem;
-      text-align: center;
-      padding: 10px;
-    }
-
-    .tour-card-img svg {
-      opacity: 0.35;
     }
 
     .tour-card-body {
@@ -256,18 +244,18 @@
         <li class="has-dropdown">
           <a href="tour.html">Tours</a>
           <div class="dropdown">
-            <a href="#astore-valley"><span class="dd-img">📷</span>Astore Valley</a>
-            <a href="#fairy-meadows"><span class="dd-img">📷</span>Fairy Meadows</a>
-            <a href="#hunza-valley"><span class="dd-img">📷</span>Hunza Valley</a>
-            <a href="#k2"><span class="dd-img">📷</span>K2 Base Camp</a>
-            <a href="#kumrat-valley"><span class="dd-img">📷</span>Kumrat Valley</a>
-            <a href="#kalash-valley"><span class="dd-img">📷</span>Kalash Valley Chitral</a>
-            <a href="#naran-kaghan"><span class="dd-img">📷</span>Naran Kaghan</a>
-            <a href="#neelum-valley"><span class="dd-img">📷</span>Neelum Valley</a>
-            <a href="#skardu-valley"><span class="dd-img">📷</span>Skardu Valley</a>
-            <a href="#shogran-valley"><span class="dd-img">📷</span>Shogran Valley</a>
-            <a href="#swat-valley"><span class="dd-img">📷</span>Swat Valley</a>
-            <a href="#umbrella-waterfall"><span class="dd-img">📷</span>Umbrella Waterfall</a>
+            <a href="#astore-valley"><span class="dd-img">🏔️</span>Astore Valley</a>
+            <a href="#fairy-meadows"><span class="dd-img">🌿</span>Fairy Meadows</a>
+            <a href="#hunza-valley"><span class="dd-img">🏞️</span>Hunza Valley</a>
+            <a href="#k2"><span class="dd-img">⛰️</span>K2 Base Camp</a>
+            <a href="#kumrat-valley"><span class="dd-img">🌲</span>Kumrat Valley</a>
+            <a href="#kalash-valley"><span class="dd-img">🎭</span>Kalash Valley Chitral</a>
+            <a href="#naran-kaghan"><span class="dd-img">💧</span>Naran Kaghan</a>
+            <a href="#neelum-valley"><span class="dd-img">🌊</span>Neelum Valley</a>
+            <a href="#skardu-valley"><span class="dd-img">🏔️</span>Skardu Valley</a>
+            <a href="#shogran-valley"><span class="dd-img">🌄</span>Shogran Valley</a>
+            <a href="#swat-valley"><span class="dd-img">🌸</span>Swat Valley</a>
+            <a href="#umbrella-waterfall"><span class="dd-img">🌈</span>Umbrella Waterfall</a>
           </div>
         </li>
 
@@ -291,10 +279,7 @@
 
       <!-- 1. Astore Valley -->
       <div class="tour-card" id="astore-valley">
-        <div class="tour-card-img">
-          <span class="img-placeholder">🏔️</span>
-          <span>Astore Valley — Image coming soon</span>
-        </div>
+        <img class="tour-card-img" src="pics/Astore-valley.jpg" alt="Astore Valley" />
         <div class="tour-card-body">
           <h3>Astore Valley</h3>
           <div class="tour-card-meta">
@@ -311,10 +296,7 @@
 
       <!-- 2. Fairy Meadows -->
       <div class="tour-card" id="fairy-meadows">
-        <div class="tour-card-img">
-          <span class="img-placeholder">🌿</span>
-          <span>Fairy Meadows — Image coming soon</span>
-        </div>
+        <img class="tour-card-img" src="pics/Fairy%20Meadows%205Days%20Tour.jpg" alt="Fairy Meadows" />
         <div class="tour-card-body">
           <h3>Fairy Meadows</h3>
           <div class="tour-card-meta">
@@ -331,10 +313,7 @@
 
       <!-- 3. Hunza Valley -->
       <div class="tour-card" id="hunza-valley">
-        <div class="tour-card-img">
-          <span class="img-placeholder">🏞️</span>
-          <span>Hunza Valley — Image coming soon</span>
-        </div>
+        <img class="tour-card-img" src="pics/Fairy%20Meadows%20Hunza%20Tour.jpeg" alt="Hunza Valley" />
         <div class="tour-card-body">
           <h3>Hunza Valley</h3>
           <div class="tour-card-meta">
@@ -351,10 +330,7 @@
 
       <!-- 4. K2 Base Camp -->
       <div class="tour-card" id="k2">
-        <div class="tour-card-img">
-          <span class="img-placeholder">⛰️</span>
-          <span>K2 Base Camp — Image coming soon</span>
-        </div>
+        <img class="tour-card-img" src="pics/Fairy%20Meadows%20Skardu%20Excursion.jpg" alt="K2 Base Camp" />
         <div class="tour-card-body">
           <h3>K2 Base Camp</h3>
           <div class="tour-card-meta">
@@ -371,10 +347,7 @@
 
       <!-- 5. Kumrat Valley -->
       <div class="tour-card" id="kumrat-valley">
-        <div class="tour-card-img">
-          <span class="img-placeholder">🌲</span>
-          <span>Kumrat Valley — Image coming soon</span>
-        </div>
+        <img class="tour-card-img" src="pics/kumrat-valley.jpg" alt="Kumrat Valley" />
         <div class="tour-card-body">
           <h3>Kumrat Valley</h3>
           <div class="tour-card-meta">
@@ -391,10 +364,7 @@
 
       <!-- 6. Kalash Valley Chitral -->
       <div class="tour-card" id="kalash-valley">
-        <div class="tour-card-img">
-          <span class="img-placeholder">🎭</span>
-          <span>Kalash Valley Chitral — Image coming soon</span>
-        </div>
+        <img class="tour-card-img" src="pics/kalash-valley.jpg" alt="Kalash Valley Chitral" />
         <div class="tour-card-body">
           <h3>Kalash Valley Chitral</h3>
           <div class="tour-card-meta">
@@ -411,10 +381,7 @@
 
       <!-- 7. Naran Kaghan -->
       <div class="tour-card" id="naran-kaghan">
-        <div class="tour-card-img">
-          <span class="img-placeholder">💧</span>
-          <span>Naran Kaghan — Image coming soon</span>
-        </div>
+        <img class="tour-card-img" src="pics/naran-kaghan.jpg" alt="Naran Kaghan Valley" />
         <div class="tour-card-body">
           <h3>Naran Kaghan Valley</h3>
           <div class="tour-card-meta">
@@ -430,10 +397,7 @@
 
       <!-- 8. Neelum Valley -->
       <div class="tour-card" id="neelum-valley">
-        <div class="tour-card-img">
-          <span class="img-placeholder">🌊</span>
-          <span>Neelum Valley — Image coming soon</span>
-        </div>
+        <img class="tour-card-img" src="pics/neelum-valley.jpg" alt="Neelum Valley" />
         <div class="tour-card-body">
           <h3>Neelum Valley</h3>
           <div class="tour-card-meta">
@@ -450,10 +414,7 @@
 
       <!-- 9. Skardu Valley -->
       <div class="tour-card" id="skardu-valley">
-        <div class="tour-card-img">
-          <span class="img-placeholder">🏔️</span>
-          <span>Skardu Valley — Image coming soon</span>
-        </div>
+        <img class="tour-card-img" src="pics/skardu-valley.jpg" alt="Skardu Valley" />
         <div class="tour-card-body">
           <h3>Skardu Valley</h3>
           <div class="tour-card-meta">
@@ -470,10 +431,7 @@
 
       <!-- 10. Shogran Valley -->
       <div class="tour-card" id="shogran-valley">
-        <div class="tour-card-img">
-          <span class="img-placeholder">🌄</span>
-          <span>Shogran Valley — Image coming soon</span>
-        </div>
+        <img class="tour-card-img" src="pics/shogran-valley.jpg" alt="Shogran Valley" />
         <div class="tour-card-body">
           <h3>Shogran Valley</h3>
           <div class="tour-card-meta">
@@ -490,10 +448,7 @@
 
       <!-- 11. Swat Valley -->
       <div class="tour-card" id="swat-valley">
-        <div class="tour-card-img">
-          <span class="img-placeholder">🌸</span>
-          <span>Swat Valley — Image coming soon</span>
-        </div>
+        <img class="tour-card-img" src="pics/swat-valley.jpg" alt="Swat Valley" />
         <div class="tour-card-body">
           <h3>Swat Valley</h3>
           <div class="tour-card-meta">
@@ -510,10 +465,7 @@
 
       <!-- 12. Umbrella Waterfall -->
       <div class="tour-card" id="umbrella-waterfall">
-        <div class="tour-card-img">
-          <span class="img-placeholder">🌈</span>
-          <span>Umbrella Waterfall — Image coming soon</span>
-        </div>
+        <img class="tour-card-img" src="pics/umbrella-waterfall.jpg" alt="Umbrella Waterfall" />
         <div class="tour-card-body">
           <h3>Umbrella Waterfall</h3>
           <div class="tour-card-meta">
