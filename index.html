@@ -6,6 +6,83 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pakistan Road Trips</title>
   <link rel="stylesheet" href="style.css" />
+  <style>
+    .nav-links li.has-dropdown {
+      position: relative;
+    }
+
+    .nav-links li.has-dropdown>a::after {
+      content: ' ▾';
+      font-size: 0.75rem;
+    }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      min-width: 220px;
+      background: rgba(15, 23, 42, 0.97);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+      z-index: 9999;
+      animation: fadeDown 0.2s ease;
+    }
+
+    @keyframes fadeDown {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .nav-links li.has-dropdown:hover .dropdown {
+      display: block;
+    }
+
+    .dropdown a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 18px;
+      color: #f8fafc;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: background 0.2s, color 0.2s;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .dropdown a:last-child {
+      border-bottom: none;
+    }
+
+    .dropdown a:hover {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+    }
+
+    .dropdown a .dd-img {
+      width: 38px;
+      height: 28px;
+      border-radius: 5px;
+      background: rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+      flex-shrink: 0;
+    }
+  </style>
 </head>
 
 <body>
@@ -28,7 +105,23 @@
       <ul class="nav-links" id="nav-links">
         <li><a href="index.html">Home</a></li>
         <li><a href="activity.html">Activity</a></li>
-        <li><a href="tour.html">Tours</a></li>
+        <li class="has-dropdown">
+          <a href="tour.html">Tours</a>
+          <div class="dropdown">
+            <a href="tour.html#astore-valley"><span class="dd-img">🏔️</span>Astore Valley</a>
+            <a href="tour.html#fairy-meadows"><span class="dd-img">🌿</span>Fairy Meadows</a>
+            <a href="tour.html#hunza-valley"><span class="dd-img">🏞️</span>Hunza Valley</a>
+            <a href="tour.html#k2"><span class="dd-img">⛰️</span>K2 Base Camp</a>
+            <a href="tour.html#kumrat-valley"><span class="dd-img">🌲</span>Kumrat Valley</a>
+            <a href="tour.html#kalash-valley"><span class="dd-img">🎭</span>Kalash Valley Chitral</a>
+            <a href="tour.html#naran-kaghan"><span class="dd-img">💧</span>Naran Kaghan</a>
+            <a href="tour.html#neelum-valley"><span class="dd-img">🌊</span>Neelum Valley</a>
+            <a href="tour.html#skardu-valley"><span class="dd-img">🏔️</span>Skardu Valley</a>
+            <a href="tour.html#shogran-valley"><span class="dd-img">🌄</span>Shogran Valley</a>
+            <a href="tour.html#swat-valley"><span class="dd-img">🌸</span>Swat Valley</a>
+            <a href="tour.html#umbrella-waterfall"><span class="dd-img">🌈</span>Umbrella Waterfall</a>
+          </div>
+        </li>
         <li><a href="packages.html">Tour Packages</a></li>
         <li><a href="blog.html">Blog</a></li>
         <li><a href="contact.html">Contact Us</a></li>
@@ -106,6 +199,33 @@
           </div>
         </div>
       </div>
+      <div class="card">
+        <div class="card-inner">
+          <div class="card-front"
+            style="background-image: url('pics/camping.jpg'); background-size: cover; color: white;">
+          </div>
+          <div class="card-back">
+            <h3>Camping in Kaghan Valley</h3>
+            <p>4 Days / 3 Nights</p>
+            <p>₨9,500.00</p>
+            <button>Explore</button>
+          </div>
+        </div>
+      </div>
+      <div class="card">
+        <div class="card-inner">
+          <div class="card-front"
+            style="background-image: url('pics/wintersports.jpg'); background-size: cover; color: white;">
+          </div>
+          <div class="card-back">
+            <h3>Winter Sports Malam Jabba</h3>
+            <p>6 Days / 5 Nights</p>
+            <p>₨12,000.00</p>
+            <button>Explore</button>
+          </div>
+        </div>
+      </div>
+    </div>
   </section>
   <section class="about">
     <h2>Welcome to Pakistan Road Trips</h2>

@@ -1,45 +1,554 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Tour Destinations | Pakistan Road Trips</title>
+  <meta name="description"
+    content="Explore Pakistan's most breathtaking tour destinations — Hunza Valley, Fairy Meadows, Skardu, K2, Swat, Naran Kaghan, and more." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── Dropdown ── */
+    .nav-links li.has-dropdown {
+      position: relative;
+    }
+
+    .nav-links li.has-dropdown>a::after {
+      content: ' ▾';
+      font-size: 0.75rem;
+    }
+
+    .dropdown {
+      display: none;
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      min-width: 220px;
+      background: rgba(15, 23, 42, 0.97);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 12px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+      z-index: 9999;
+      animation: fadeDown 0.2s ease;
+    }
+
+    @keyframes fadeDown {
+      from {
+        opacity: 0;
+        transform: translateY(-8px);
+      }
+
+      to {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+
+    .nav-links li.has-dropdown:hover .dropdown {
+      display: block;
+    }
+
+    .dropdown a {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 12px 18px;
+      color: #f8fafc;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: background 0.2s, color 0.2s;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    }
+
+    .dropdown a:last-child {
+      border-bottom: none;
+    }
+
+    .dropdown a:hover {
+      background: rgba(16, 185, 129, 0.15);
+      color: #10b981;
+    }
+
+    .dropdown a .dd-img {
+      width: 38px;
+      height: 28px;
+      border-radius: 5px;
+      object-fit: cover;
+      background: rgba(255, 255, 255, 0.08);
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.65rem;
+      color: #94a3b8;
+      text-align: center;
+    }
+
+    /* ── Tour Page Hero ── */
+    .tours-hero {
+      min-height: 40vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 60px 20px 40px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tours-hero h1 {
+      font-size: clamp(2.2rem, 5vw, 3.8rem);
+      font-weight: 700;
+      background: linear-gradient(135deg, #fff 0%, #10b981 100%);
+      -webkit-background-clip: text;
+      background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 16px;
+    }
+
+    .tours-hero p {
+      color: #94a3b8;
+      font-size: 1.1rem;
+      max-width: 620px;
+      line-height: 1.7;
+    }
+
+    /* ── Destination Grid ── */
+    .tours-section {
+      padding: 60px 20px 80px;
+      position: relative;
+      z-index: 1;
+    }
+
+    .tours-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 32px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .tour-card {
+      background: rgba(15, 23, 42, 0.6);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.35s ease;
+    }
+
+    .tour-card:hover {
+      transform: translateY(-8px);
+      box-shadow: 0 24px 48px rgba(0, 0, 0, 0.5);
+    }
+
+    .tour-card-img {
+      width: 100%;
+      height: 220px;
+      background: rgba(255, 255, 255, 0.04);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      gap: 8px;
+      color: #94a3b8;
+      font-size: 0.85rem;
+      text-align: center;
+      padding: 10px;
+    }
+
+    .tour-card-img svg {
+      opacity: 0.35;
+    }
+
+    .tour-card-body {
+      padding: 24px;
+    }
+
+    .tour-card-body h3 {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 10px;
+    }
+
+    .tour-card-body p {
+      color: #94a3b8;
+      font-size: 0.9rem;
+      line-height: 1.65;
+      margin-bottom: 18px;
+    }
+
+    .tour-card-meta {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 18px;
+    }
+
+    .meta-tag {
+      background: rgba(16, 185, 129, 0.12);
+      color: #10b981;
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      border-radius: 20px;
+      padding: 4px 12px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .tour-card-body a.btn-explore {
+      display: inline-block;
+      background: #10b981;
+      color: #fff;
+      text-decoration: none;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      transition: background 0.2s, transform 0.2s;
+    }
+
+    .tour-card-body a.btn-explore:hover {
+      background: #059669;
+      transform: translateY(-2px);
+    }
+
+    /* placeholder icon */
+    .img-placeholder {
+      font-size: 2rem;
+    }
+  </style>
 </head>
+
 <body>
-  <header>
-    <div class="top-bar">
-      <span>info@pakistanroadtrips.pk |03000000000</span>
-    </div>
-     <nav class="navbar">
-  <h1>Pakistan Road Trips</h1>
 
-  <!-- Hamburger Menu Button -->
-  <div class="menu-toggle" id="menu-toggle" aria-expanded="false"></div>
-
-  <!-- Navigation Links -->
-  <ul class="nav-links" id="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="activity.html">Activity</a></li>
-    <li><a href="tour.html">Tours</a></li>
-    <li><a href="packages.html">Tour Packages</a></li>
-    <li><a href="blog.html">Blog</a></li>
-    <li><a href="contact.html">Contact Us</a></li>
-  </ul>
-</nav>
-
-  </header>
+  <!-- Video Background -->
   <div class="video-background">
     <video autoplay loop muted playsinline>
       <source src="pics/background.mp4" type="video/mp4">
     </video>
   </div>
-   <footer>
+
+  <header>
+    <div class="top-bar">
+      <span>info@pakistanroadtrips.pk | 0323-9905077</span>
+    </div>
+    <nav class="navbar">
+      <h1><a href="index.html">Pakistan Road Trips</a></h1>
+
+      <!-- Hamburger -->
+      <div class="menu-toggle" id="menu-toggle" aria-expanded="false"></div>
+
+      <!-- Nav Links -->
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="activity.html">Activity</a></li>
+
+        <!-- Tours Dropdown -->
+        <li class="has-dropdown">
+          <a href="tour.html">Tours</a>
+          <div class="dropdown">
+            <a href="#astore-valley"><span class="dd-img">📷</span>Astore Valley</a>
+            <a href="#fairy-meadows"><span class="dd-img">📷</span>Fairy Meadows</a>
+            <a href="#hunza-valley"><span class="dd-img">📷</span>Hunza Valley</a>
+            <a href="#k2"><span class="dd-img">📷</span>K2 Base Camp</a>
+            <a href="#kumrat-valley"><span class="dd-img">📷</span>Kumrat Valley</a>
+            <a href="#kalash-valley"><span class="dd-img">📷</span>Kalash Valley Chitral</a>
+            <a href="#naran-kaghan"><span class="dd-img">📷</span>Naran Kaghan</a>
+            <a href="#neelum-valley"><span class="dd-img">📷</span>Neelum Valley</a>
+            <a href="#skardu-valley"><span class="dd-img">📷</span>Skardu Valley</a>
+            <a href="#shogran-valley"><span class="dd-img">📷</span>Shogran Valley</a>
+            <a href="#swat-valley"><span class="dd-img">📷</span>Swat Valley</a>
+            <a href="#umbrella-waterfall"><span class="dd-img">📷</span>Umbrella Waterfall</a>
+          </div>
+        </li>
+
+        <li><a href="packages.html">Tour Packages</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="tours-hero">
+    <h1>Explore Pakistan's Destinations</h1>
+    <p>From the towering peaks of Karakoram to the lush valleys of Swat — discover 12 breathtaking destinations
+      hand-picked for unforgettable road trips.</p>
+  </section>
+
+  <!-- Destinations Grid -->
+  <section class="tours-section">
+    <div class="tours-grid">
+
+      <!-- 1. Astore Valley -->
+      <div class="tour-card" id="astore-valley">
+        <div class="tour-card-img">
+          <span class="img-placeholder">🏔️</span>
+          <span>Astore Valley — Image coming soon</span>
+        </div>
+        <div class="tour-card-body">
+          <h3>Astore Valley</h3>
+          <div class="tour-card-meta">
+            <span class="meta-tag">Gilgit-Baltistan</span>
+            <span class="meta-tag">Trekking</span>
+            <span class="meta-tag">Nature</span>
+          </div>
+          <p>Embark on a mesmerizing adventure with our exclusive Astore Valley tour packages. Nestled in
+            Gilgit-Baltistan, Astore Valley is blessed with lush green meadows, glacial rivers, and stunning Himalayan
+            vistas that will leave you speechless.</p>
+          <a class="btn-explore" href="/destinations/astore-valley.html" target="_blank">Explore Tours</a>
+        </div>
+      </div>
+
+      <!-- 2. Fairy Meadows -->
+      <div class="tour-card" id="fairy-meadows">
+        <div class="tour-card-img">
+          <span class="img-placeholder">🌿</span>
+          <span>Fairy Meadows — Image coming soon</span>
+        </div>
+        <div class="tour-card-body">
+          <h3>Fairy Meadows</h3>
+          <div class="tour-card-meta">
+            <span class="meta-tag">Gilgit-Baltistan</span>
+            <span class="meta-tag">Camping</span>
+            <span class="meta-tag">Himalayas</span>
+          </div>
+          <p>Fairy Meadows, nestled in the heart of Pakistan's majestic Himalayas, offers an enchanting escape into
+            nature's embrace. Situated at the base of Nanga Parbat — the world's 9th highest peak — it is one of
+            Pakistan's most iconic destinations.</p>
+          <a class="btn-explore" href="destinations/fairy-meadows.html" target="_blank">Explore Tours</a>
+        </div>
+      </div>
+
+      <!-- 3. Hunza Valley -->
+      <div class="tour-card" id="hunza-valley">
+        <div class="tour-card-img">
+          <span class="img-placeholder">🏞️</span>
+          <span>Hunza Valley — Image coming soon</span>
+        </div>
+        <div class="tour-card-body">
+          <h3>Hunza Valley</h3>
+          <div class="tour-card-meta">
+            <span class="meta-tag">Gilgit-Baltistan</span>
+            <span class="meta-tag">Culture</span>
+            <span class="meta-tag">Scenic</span>
+          </div>
+          <p>Discover the enchanting beauty of Hunza Valley with our all-inclusive tour packages. Immerse yourself in
+            breathtaking landscapes, ancient forts like Baltit and Altit, and experience the warmth of the local Hunzai
+            culture.</p>
+          <a class="btn-explore" href="destinations/hunza-valley.html" target="_blank">Explore Tours</a>
+        </div>
+      </div>
+
+      <!-- 4. K2 Base Camp -->
+      <div class="tour-card" id="k2">
+        <div class="tour-card-img">
+          <span class="img-placeholder">⛰️</span>
+          <span>K2 Base Camp — Image coming soon</span>
+        </div>
+        <div class="tour-card-body">
+          <h3>K2 Base Camp</h3>
+          <div class="tour-card-meta">
+            <span class="meta-tag">Karakoram</span>
+            <span class="meta-tag">Adventure</span>
+            <span class="meta-tag">Trekking</span>
+          </div>
+          <p>Discover the towering majesty of the world's second-highest peak and immerse yourself in the breathtaking
+            landscapes of the Karakoram Range. Our K2 tour package is the ultimate adventure for serious trekkers and
+            mountain lovers.</p>
+          <a class="btn-explore" href="destinations/k2.html" target="_blank">Explore Tours</a>
+        </div>
+      </div>
+
+      <!-- 5. Kumrat Valley -->
+      <div class="tour-card" id="kumrat-valley">
+        <div class="tour-card-img">
+          <span class="img-placeholder">🌲</span>
+          <span>Kumrat Valley — Image coming soon</span>
+        </div>
+        <div class="tour-card-body">
+          <h3>Kumrat Valley</h3>
+          <div class="tour-card-meta">
+            <span class="meta-tag">KPK</span>
+            <span class="meta-tag">Hidden Gem</span>
+            <span class="meta-tag">Forest</span>
+          </div>
+          <p>Discover the extraordinary beauty of Kumrat Valley — a hidden gem in Dir Kohistan. Its vibrant culture,
+            dense pine forests, crystal-clear rivers, and warm hospitality make it a perfect off-the-beaten-path
+            destination for nature lovers.</p>
+          <a class="btn-explore" href="destinations/kumrat-valley.html" target="_blank">Explore Tours</a>
+        </div>
+      </div>
+
+      <!-- 6. Kalash Valley Chitral -->
+      <div class="tour-card" id="kalash-valley">
+        <div class="tour-card-img">
+          <span class="img-placeholder">🎭</span>
+          <span>Kalash Valley Chitral — Image coming soon</span>
+        </div>
+        <div class="tour-card-body">
+          <h3>Kalash Valley Chitral</h3>
+          <div class="tour-card-meta">
+            <span class="meta-tag">Chitral</span>
+            <span class="meta-tag">Culture</span>
+            <span class="meta-tag">Festivals</span>
+          </div>
+          <p>Book your tour package and let the fairy-tale come to life in Kalash Valley. Home to the ancient Kalash
+            tribe, this valley is famous for its colorful festivals, unique traditions, wooden temples, and stunning
+            Hindukush scenery.</p>
+          <a class="btn-explore" href="destinations/kalash-valley.html" target="_blank">Explore Tours</a>
+        </div>
+      </div>
+
+      <!-- 7. Naran Kaghan -->
+      <div class="tour-card" id="naran-kaghan">
+        <div class="tour-card-img">
+          <span class="img-placeholder">💧</span>
+          <span>Naran Kaghan — Image coming soon</span>
+        </div>
+        <div class="tour-card-body">
+          <h3>Naran Kaghan Valley</h3>
+          <div class="tour-card-meta">
+            <span class="meta-tag">KPK</span>
+            <span class="meta-tag">Lakes</span>
+            <span class="meta-tag">Mountains</span>
+          </div>
+          <p>Explore ancient forts, crystal-clear lakes like Saiful Muluk, and towering mountains while experiencing the
+            unique traditions of local communities. Naran Kaghan is Pakistan's most beloved summer retreat.</p>
+          <a class="btn-explore" href="destinations/naran-kaghan.html" target="_blank">Explore Tours</a>
+        </div>
+      </div>
+
+      <!-- 8. Neelum Valley -->
+      <div class="tour-card" id="neelum-valley">
+        <div class="tour-card-img">
+          <span class="img-placeholder">🌊</span>
+          <span>Neelum Valley — Image coming soon</span>
+        </div>
+        <div class="tour-card-body">
+          <h3>Neelum Valley</h3>
+          <div class="tour-card-meta">
+            <span class="meta-tag">AJK</span>
+            <span class="meta-tag">River</span>
+            <span class="meta-tag">Forests</span>
+          </div>
+          <p>Unveil the secrets of Neelum Valley — Azad Kashmir's crown jewel. Named after the turquoise Neelum River,
+            this valley stretches 200 km along dense forests, roaring waterfalls, and charming villages that feel
+            untouched by time.</p>
+          <a class="btn-explore" href="destinations/neelum-valley.html" target="_blank">Explore Tours</a>
+        </div>
+      </div>
+
+      <!-- 9. Skardu Valley -->
+      <div class="tour-card" id="skardu-valley">
+        <div class="tour-card-img">
+          <span class="img-placeholder">🏔️</span>
+          <span>Skardu Valley — Image coming soon</span>
+        </div>
+        <div class="tour-card-body">
+          <h3>Skardu Valley</h3>
+          <div class="tour-card-meta">
+            <span class="meta-tag">Gilgit-Baltistan</span>
+            <span class="meta-tag">Lakes</span>
+            <span class="meta-tag">Desert</span>
+          </div>
+          <p>Book your unforgettable journey to Skardu Valley — the gateway to the world's highest peaks. Home to
+            Shangrila Resort, Deosai Plains, Upper Kachura Lake, and the ancient Skardu Fort, it's a destination unlike
+            any other.</p>
+          <a class="btn-explore" href="destinations\skardu-valley.html" target="_blank">Explore Tours</a>
+        </div>
+      </div>
+
+      <!-- 10. Shogran Valley -->
+      <div class="tour-card" id="shogran-valley">
+        <div class="tour-card-img">
+          <span class="img-placeholder">🌄</span>
+          <span>Shogran Valley — Image coming soon</span>
+        </div>
+        <div class="tour-card-body">
+          <h3>Shogran Valley</h3>
+          <div class="tour-card-meta">
+            <span class="meta-tag">KPK</span>
+            <span class="meta-tag">Meadows</span>
+            <span class="meta-tag">Family</span>
+          </div>
+          <p>From nature escapes to adventurous treks, family fun, and photography expeditions, our Shogran Valley tour
+            packages offer a seamless exploration of this serene Himalayan paradise. Enjoy 360° mountain views from
+            Pakistan's most scenic plateau.</p>
+          <a class="btn-explore" href="destinations/shogran-valley.html" target="_blank">Explore Tours</a>
+        </div>
+      </div>
+
+      <!-- 11. Swat Valley -->
+      <div class="tour-card" id="swat-valley">
+        <div class="tour-card-img">
+          <span class="img-placeholder">🌸</span>
+          <span>Swat Valley — Image coming soon</span>
+        </div>
+        <div class="tour-card-body">
+          <h3>Swat Valley</h3>
+          <div class="tour-card-meta">
+            <span class="meta-tag">KPK</span>
+            <span class="meta-tag">Switzerland of East</span>
+            <span class="meta-tag">History</span>
+          </div>
+          <p>Explore the serene beauty of Swat Valley — often called the "Switzerland of the East." Book your Swat
+            Valley tour today and embark on a remarkable journey of natural wonders, Buddhist ruins, lush green
+            landscapes, and cultural treasures.</p>
+          <a class="btn-explore" href="destinations/swat-valley.html" target="_blank">Explore Tours</a>
+        </div>
+      </div>
+
+      <!-- 12. Umbrella Waterfall -->
+      <div class="tour-card" id="umbrella-waterfall">
+        <div class="tour-card-img">
+          <span class="img-placeholder">🌈</span>
+          <span>Umbrella Waterfall — Image coming soon</span>
+        </div>
+        <div class="tour-card-body">
+          <h3>Umbrella Waterfall</h3>
+          <div class="tour-card-meta">
+            <span class="meta-tag">Islamabad</span>
+            <span class="meta-tag">Day Trip</span>
+            <span class="meta-tag">Waterfall</span>
+          </div>
+          <p>Don't miss this extraordinary experience near Islamabad. The Umbrella Waterfall, also called Saidpur
+            Waterfall, cascades in a unique umbrella shape through lush green hills — perfect for a refreshing day or
+            overnight trip from the twin cities.</p>
+          <a class="btn-explore" href="destinations/umbrella-waterfall.html" target="_blank">Explore Tours</a>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <footer>
     <h4>Contact Info</h4>
-    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsa, illum.</p>
+    <p>address not set yet</p>
+    <p>📞 033456789012 &nbsp;|&nbsp; ✉️ info@pakistanroadtrips.pk</p>
     <p>&copy; 2023 pakistanroadtrips.pk All Rights Reserved.</p>
   </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // Smooth scroll for dropdown anchor links
+    document.querySelectorAll('.dropdown a[href^="#"]').forEach(link => {
+      link.addEventListener('click', e => {
+        e.preventDefault();
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    });
+  </script>
 </body>
-<script src="script.js">
-</script>
+
 </html>
