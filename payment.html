@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Confirm Payment | Pakistan Road Trips</title>
+  <meta name="description" content="Upload your JazzCash, Easypaisa or bank transfer receipt to confirm your Pakistan Road Trips booking." />
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    /* ── Page layout ── */
+    .pay-hero {
+      min-height: 30vh;
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: center;
+      text-align: center; padding: 60px 20px 30px;
+      position: relative; z-index: 1;
+    }
+    .pay-hero h1 {
+      font-size: clamp(2rem, 4vw, 3.2rem); font-weight: 700;
+      background: linear-gradient(135deg, #fff 0%, #10b981 100%);
+      -webkit-background-clip: text; background-clip: text;
+      -webkit-text-fill-color: transparent; margin-bottom: 12px;
+    }
+    .pay-hero p { color: #94a3b8; font-size: 1rem; max-width: 580px; line-height: 1.7; }
+
+    /* ── Steps banner ── */
+    .steps-bar {
+      display: flex; justify-content: center; gap: 0;
+      max-width: 680px; margin: 0 auto 40px;
+      position: relative; z-index: 1; padding: 0 20px;
+    }
+    .step {
+      flex: 1; text-align: center; padding: 14px 10px;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.07);
+      font-size: 0.78rem; color: #64748b; position: relative;
+    }
+    .step:first-child { border-radius: 12px 0 0 12px; }
+    .step:last-child  { border-radius: 0 12px 12px 0; }
+    .step.active { background: rgba(16,185,129,0.12); border-color: rgba(16,185,129,0.3); color: #10b981; }
+    .step .sn {
+      display: block; font-size: 1.3rem; font-weight: 700; margin-bottom: 3px;
+    }
+
+    /* ── Card ── */
+    .pay-card {
+      max-width: 540px; margin: 0 auto 80px;
+      background: rgba(15,23,42,0.7);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 20px; padding: 40px 40px 32px;
+      position: relative; z-index: 1;
+    }
+
+    /* ── Bank info box ── */
+    .bank-box {
+      background: rgba(16,185,129,0.07);
+      border: 1px solid rgba(16,185,129,0.2);
+      border-radius: 12px; padding: 20px 24px; margin-bottom: 28px;
+    }
+    .bank-box h3 { font-size: 0.95rem; font-weight: 700; color: #10b981; margin-bottom: 12px; }
+    .bank-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; }
+    .bank-row:last-child { margin-bottom: 0; }
+    .bank-label { font-size: 0.78rem; color: #64748b; }
+    .bank-value { font-size: 0.88rem; font-weight: 600; color: #f8fafc; letter-spacing: 0.3px; }
+    .copy-btn {
+      background: rgba(255,255,255,0.07); border: 1px solid rgba(255,255,255,0.12);
+      border-radius: 6px; padding: 3px 10px; color: #94a3b8;
+      font-size: 0.72rem; cursor: pointer; transition: all 0.2s;
+    }
+    .copy-btn:hover { background: rgba(16,185,129,0.15); color: #10b981; }
+
+    /* ── Form groups ── */
+    .pf-group { margin-bottom: 18px; }
+    .pf-group label {
+      display: block; font-size: 0.8rem; font-weight: 600;
+      color: #cbd5e1; margin-bottom: 7px;
+    }
+    .pf-wrap {
+      display: flex; align-items: center;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 10px; overflow: hidden;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .pf-wrap:focus-within { border-color: #10b981; box-shadow: 0 0 0 3px rgba(16,185,129,0.18); }
+    .pf-icon { padding: 0 13px; color: #64748b; font-size: 1rem; flex-shrink: 0; }
+    .pf-wrap input, .pf-wrap select {
+      flex: 1; background: transparent; border: none; outline: none;
+      padding: 12px 14px 12px 0;
+      color: #f8fafc; font-family: 'Poppins', sans-serif; font-size: 0.9rem;
+    }
+    .pf-wrap input::placeholder { color: #475569; }
+
+    /* ── File upload ── */
+    .file-area {
+      border: 2px dashed rgba(255,255,255,0.15);
+      border-radius: 12px; padding: 28px 20px; text-align: center;
+      cursor: pointer; transition: border-color 0.25s, background 0.25s;
+      position: relative;
+    }
+    .file-area:hover, .file-area.dragover {
+      border-color: #10b981; background: rgba(16,185,129,0.06);
+    }
+    .file-area input[type="file"] {
+      position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%;
+    }
+    .file-icon { font-size: 2.4rem; margin-bottom: 10px; }
+    .file-area p { color: #64748b; font-size: 0.85rem; margin: 0; }
+    .file-area .file-name { color: #10b981; font-weight: 600; font-size: 0.88rem; margin-top: 8px; display: none; }
+    .file-limit { font-size: 0.7rem; color: #475569; margin-top: 5px; }
+
+    /* ── Submit ── */
+    .pf-submit {
+      width: 100%; padding: 15px;
+      background: linear-gradient(135deg, #10b981, #059669);
+      color: #fff; border: none; border-radius: 10px;
+      font-family: 'Poppins', sans-serif; font-size: 0.95rem;
+      font-weight: 700; letter-spacing: 1px; cursor: pointer;
+      margin-top: 10px;
+      transition: transform 0.2s, box-shadow 0.2s;
+      box-shadow: 0 6px 20px rgba(16,185,129,0.3);
+    }
+    .pf-submit:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 10px 28px rgba(16,185,129,0.45); }
+    .pf-submit:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    /* ── Success ── */
+    .pay-success { display: none; text-align: center; padding: 20px 0; }
+    .pay-success .ps-icon { font-size: 3.5rem; margin-bottom: 14px; }
+    .pay-success h3 { font-size: 1.3rem; font-weight: 700; color: #10b981; margin-bottom: 10px; }
+    .pay-success p { color: #94a3b8; font-size: 0.9rem; line-height: 1.65; }
+
+    /* ── Progress bar ── */
+    .upload-progress {
+      display: none; background: rgba(255,255,255,0.06);
+      border-radius: 50px; height: 6px; overflow: hidden; margin-top: 14px;
+    }
+    .upload-bar {
+      height: 100%; background: linear-gradient(90deg, #10b981, #34d399);
+      border-radius: 50px; width: 0%; transition: width 0.4s ease;
+    }
+
+    @media (max-width: 580px) { .pay-card { padding: 28px 20px 24px; } }
+  </style>
+</head>
+<body>
+
+  <!-- Video Background -->
+  <div class="video-background">
+    <video autoplay loop muted playsinline>
+      <source src="pics/background.mp4" type="video/mp4">
+    </video>
+  </div>
+
+  <!-- Header -->
+  <header>
+    <div class="top-bar"><span>info@pakistanroadtrips.pk | 0323-9905077</span></div>
+    <nav class="navbar">
+      <h1><a href="index.html">Pakistan Road Trips</a></h1>
+      <div class="menu-toggle" id="menu-toggle" aria-expanded="false"></div>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="activity.html">Activity</a></li>
+        <li><a href="tour.html">Tours</a></li>
+        <li><a href="packages.html">Tour Packages</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <!-- Hero -->
+  <section class="pay-hero">
+    <h1>💳 Confirm Your Payment</h1>
+    <p>Transfer the tour amount to our account below, then upload your receipt here to trigger instant booking confirmation.</p>
+  </section>
+
+  <!-- Steps -->
+  <div class="steps-bar">
+    <div class="step">
+      <span class="sn">1️⃣</span>Book &amp; Get your Booking ID
+    </div>
+    <div class="step">
+      <span class="sn">2️⃣</span>Transfer Payment to Account
+    </div>
+    <div class="step active">
+      <span class="sn">3️⃣</span>Upload Receipt Here ← You are here
+    </div>
+  </div>
+
+  <!-- Main Card -->
+  <div class="pay-card">
+
+    <!-- Bank Details -->
+    <div class="bank-box">
+      <h3>🏦 Transfer To</h3>
+      <div class="bank-row">
+        <span class="bank-label">Bank</span>
+        <span class="bank-value">Meezan Bank</span>
+      </div>
+      <div class="bank-row">
+        <span class="bank-label">Account Title</span>
+        <span class="bank-value">Pakistan Road Trips (Pvt.)</span>
+      </div>
+      <div class="bank-row">
+        <span class="bank-label">Account Number</span>
+        <span class="bank-value" id="accNum">0123-0123456789</span>
+        <button class="copy-btn" onclick="copyAcc()">Copy</button>
+      </div>
+      <div class="bank-row">
+        <span class="bank-label">IBAN</span>
+        <span class="bank-value" style="font-size:0.75rem;">PK00MEZN0123456789012345</span>
+      </div>
+      <div class="bank-row" style="margin-top:12px;border-top:1px solid rgba(255,255,255,0.07);padding-top:12px;">
+        <span class="bank-label">JazzCash / Easypaisa</span>
+        <span class="bank-value">0323-9905077</span>
+      </div>
+    </div>
+
+    <!-- Upload Form -->
+    <form id="paymentUploadForm" novalidate>
+
+      <!-- Booking ID -->
+      <div class="pf-group">
+        <label for="pay-booking-id">Booking ID: *</label>
+        <div class="pf-wrap">
+          <span class="pf-icon">🔖</span>
+          <input type="text" id="pay-booking-id" name="bookingId"
+                 placeholder="e.g., PKR-123456" pattern="PKR-\d{6}"
+                 title="Format: PKR-XXXXXX" required>
+        </div>
+      </div>
+
+      <!-- Payment Method -->
+      <div class="pf-group">
+        <label for="pay-method">Payment Method: *</label>
+        <div class="pf-wrap">
+          <span class="pf-icon">💳</span>
+          <select id="pay-method" name="paymentMethod" required>
+            <option value="" disabled selected>Select method</option>
+            <option value="Meezan Bank Transfer">Meezan Bank Transfer</option>
+            <option value="JazzCash">JazzCash</option>
+            <option value="Easypaisa">Easypaisa</option>
+            <option value="Other Bank Transfer">Other Bank Transfer</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- Amount Paid -->
+      <div class="pf-group">
+        <label for="pay-amount">Amount Paid (Rs.): *</label>
+        <div class="pf-wrap">
+          <span class="pf-icon">💰</span>
+          <input type="number" id="pay-amount" name="amountPaid"
+                 placeholder="e.g., 65000" min="1000" required>
+        </div>
+      </div>
+
+      <!-- Receipt Upload -->
+      <div class="pf-group">
+        <label>Upload Receipt Screenshot / PDF: *</label>
+        <div class="file-area" id="fileArea">
+          <input type="file" id="pay-receipt" name="receiptFile"
+                 accept="image/*,application/pdf" required>
+          <div class="file-icon">📎</div>
+          <p>Drag &amp; drop or <strong>click to browse</strong></p>
+          <p style="font-size:0.72rem;color:#475569;margin-top:4px;">JPG, PNG, PDF — Max 5 MB</p>
+          <div class="file-name" id="fileName"></div>
+        </div>
+        <div class="upload-progress" id="uploadProgress">
+          <div class="upload-bar" id="uploadBar"></div>
+        </div>
+      </div>
+
+      <button type="submit" class="pf-submit" id="paySubmitBtn">Submit Proof of Payment</button>
+    </form>
+
+    <!-- Success -->
+    <div class="pay-success" id="paySuccess">
+      <div class="ps-icon">✅</div>
+      <h3>Receipt Submitted!</h3>
+      <p>Our team is reviewing your transfer. You will receive a <strong style="color:#10b981;">WhatsApp confirmation</strong> within 2 hours once the payment is verified and your seat is secured.</p>
+      <p style="margin-top:12px;font-size:0.8rem;color:#475569;">Queries? Call or WhatsApp: <a href="tel:+923239905077" style="color:#10b981;">0323-9905077</a></p>
+    </div>
+
+  </div>
+
+  <footer>
+    <h4>Contact Info</h4>
+    <p>📞 0323-9905077 &nbsp;|&nbsp; ✉️ info@pakistanroadtrips.pk</p>
+    <p>&copy; 2025 pakistanroadtrips.pk All Rights Reserved.</p>
+  </footer>
+
+  <script src="script.js"></script>
+  <script>
+    // ── CONFIG ── Replace with your Make.com Payment Webhook URL ──
+    const MAKE_PAYMENT_WEBHOOK = 'YOUR_PAYMENT_WEBHOOK_URL';
+
+    // ── File input display ──────────────────────────────────────
+    const fileInput  = document.getElementById('pay-receipt');
+    const fileArea   = document.getElementById('fileArea');
+    const fileNameEl = document.getElementById('fileName');
+
+    fileInput.addEventListener('change', function () {
+      const file = this.files[0];
+      if (!file) return;
+      // Enforce 5 MB limit
+      if (file.size > 5 * 1024 * 1024) {
+        alert('⚠️ File too large. Please upload an image or PDF under 5 MB.');
+        this.value = '';
+        return;
+      }
+      fileNameEl.textContent = '📄 ' + file.name;
+      fileNameEl.style.display = 'block';
+    });
+
+    // Drag & drop styling
+    ['dragover', 'dragenter'].forEach(ev => {
+      fileArea.addEventListener(ev, e => { e.preventDefault(); fileArea.classList.add('dragover'); });
+    });
+    ['dragleave', 'drop'].forEach(ev => {
+      fileArea.addEventListener(ev, () => fileArea.classList.remove('dragover'));
+    });
+
+    // ── Copy account number ─────────────────────────────────────
+    function copyAcc() {
+      navigator.clipboard.writeText(document.getElementById('accNum').textContent)
+        .then(() => alert('Account number copied!'))
+        .catch(() => {});
+    }
+
+    // ── Form submission ─────────────────────────────────────────
+    document.getElementById('paymentUploadForm').addEventListener('submit', function (e) {
+      e.preventDefault();
+
+      const form      = this;
+      const file      = fileInput.files[0];
+      const submitBtn = document.getElementById('paySubmitBtn');
+
+      if (!form.checkValidity()) { form.reportValidity(); return; }
+      if (!file) { alert('Please select your receipt image or PDF.'); return; }
+
+      // Read file as base64
+      const reader = new FileReader();
+
+      reader.onloadstart = () => {
+        submitBtn.textContent = 'Uploading Receipt...';
+        submitBtn.disabled = true;
+        // Animate progress bar
+        const bar = document.getElementById('uploadBar');
+        const prog = document.getElementById('uploadProgress');
+        prog.style.display = 'block';
+        let w = 0;
+        const tick = setInterval(() => {
+          w = Math.min(w + 8, 85);
+          bar.style.width = w + '%';
+          if (w >= 85) clearInterval(tick);
+        }, 120);
+      };
+
+      reader.onloadend = async function () {
+        const base64Data = reader.result.split(',')[1];
+
+        const payload = {
+          bookingId:     document.getElementById('pay-booking-id').value.trim().toUpperCase(),
+          paymentMethod: document.getElementById('pay-method').value,
+          amountPaid:    document.getElementById('pay-amount').value,
+          fileName:      file.name,
+          fileType:      file.type,
+          fileData:      base64Data,
+          timestamp:     new Date().toISOString()
+        };
+
+        try {
+          if (MAKE_PAYMENT_WEBHOOK && MAKE_PAYMENT_WEBHOOK !== 'YOUR_PAYMENT_WEBHOOK_URL') {
+            const res = await fetch(MAKE_PAYMENT_WEBHOOK, {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(payload)
+            });
+            if (!res.ok) throw new Error('Network error');
+          }
+
+          // Complete progress bar
+          document.getElementById('uploadBar').style.width = '100%';
+
+          setTimeout(() => {
+            document.getElementById('paymentUploadForm').style.display = 'none';
+            document.getElementById('paySuccess').style.display = 'block';
+            form.reset();
+            fileNameEl.style.display = 'none';
+          }, 400);
+
+        } catch (err) {
+          console.error('Upload error:', err);
+          alert('⚠️ Upload failed. Please try again or WhatsApp your receipt directly to 0323-9905077');
+          submitBtn.textContent = 'Submit Proof of Payment';
+          submitBtn.disabled = false;
+          document.getElementById('uploadProgress').style.display = 'none';
+        }
+      };
+
+      reader.readAsDataURL(file);
+    });
+  </script>
+
+</body>
+</html>
