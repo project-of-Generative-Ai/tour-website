@@ -414,7 +414,7 @@ const MAKE_BOOKING_WEBHOOK = 'YOUR_MAKE_WEBHOOK_URL';
       form.reset();
     } catch (err) {
       console.error('Booking submission error:', err);
-      alert('⚠️ System error. Please try again or contact us directly on WhatsApp: 0323-9905077');
+      alert('⚠️ System error. Please try again or contact us directly on WhatsApp: 03199819952');
     } finally {
       submitBtn.textContent = originalText;
       submitBtn.disabled = false;
