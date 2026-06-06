@@ -158,14 +158,14 @@
       const bookingPayload = {
         bookingId: generateBookingId(),
         tourName: document.getElementById('formTourName').value,
-        customerName: document.getElementById('userName').value.trim(),
-        whatsappNumber: normalizePakistanPhone(document.getElementById('userWhatsApp').value),
+        name: document.getElementById('userName').value.trim(),
+        to: normalizePakistanPhone(document.getElementById('userWhatsApp').value),
         email: document.getElementById('userEmail').value.trim(),
-        departureCity: document.getElementById('departureCity').value,
-        departureDate: document.getElementById('departureDate').value,
+        city: document.getElementById('departureCity').value,
+        date: document.getElementById('departureDate').value,
         seats: parseInt(document.getElementById('seatCount').value, 10),
-        roomType: document.getElementById('roomSharing').value,
-        paymentStatus: 'Pending',
+        room: document.getElementById('roomSharing').value,
+        status: 'Pending',
         timestamp: new Date().toISOString()
       };
 
@@ -232,7 +232,7 @@
         leadId: generateLeadId(),
         source: 'Website Form',
         customerName: form.querySelector('#leadName').value.trim(),
-        whatsappNumber: normalizePakistanPhone(form.querySelector('#leadWhatsApp').value),
+        to: normalizePakistanPhone(form.querySelector('#leadWhatsApp').value),
         email: (form.querySelector('#leadEmail')?.value || '').trim(),
         destination: form.querySelector('#leadDestination').value,
         preferredMonth: form.querySelector('#leadMonth').value,
