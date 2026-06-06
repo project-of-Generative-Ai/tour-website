@@ -4,17 +4,297 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Book your dream Pakistan tour package — Hunza, Fairy Meadows, Skardu, Swat, Neelum Valley and more.">
     <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <title>Tour Packages | Pakistan Road Trips</title>
+
+    <style>
+        /* ── Booking Modal Overlay ── */
+        .booking-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            -webkit-backdrop-filter: blur(6px);
+            backdrop-filter: blur(6px);
+            z-index: 9000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.35s ease;
+        }
+
+        .booking-overlay.active {
+            opacity: 1;
+            pointer-events: all;
+        }
+
+        /* ── Modal Box ── */
+        .booking-modal {
+            background: #0f172a;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.7);
+            width: 100%;
+            max-width: 520px;
+            max-height: 90vh;
+            overflow-y: auto;
+            padding: 36px 36px 28px;
+            position: relative;
+            transform: translateY(30px) scale(0.97);
+            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .booking-overlay.active .booking-modal {
+            transform: translateY(0) scale(1);
+        }
+
+        /* Scrollbar */
+        .booking-modal::-webkit-scrollbar { width: 5px; }
+        .booking-modal::-webkit-scrollbar-track { background: transparent; }
+        .booking-modal::-webkit-scrollbar-thumb { background: #10b981; border-radius: 10px; }
+
+        /* Close Button */
+        .modal-close {
+            position: absolute;
+            top: 14px;
+            right: 18px;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.12);
+            border-radius: 50%;
+            width: 34px;
+            height: 34px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #94a3b8;
+            font-size: 1.1rem;
+            transition: background 0.2s, color 0.2s;
+            padding: 0;
+        }
+
+        .modal-close:hover {
+            background: rgba(239, 68, 68, 0.2);
+            color: #ef4444;
+            border-color: rgba(239, 68, 68, 0.3);
+        }
+
+        /* Modal Header */
+        .modal-header {
+            margin-bottom: 24px;
+        }
+
+        .modal-header p.modal-sub {
+            color: #64748b;
+            font-size: 0.85rem;
+            margin-top: 4px;
+            margin-bottom: 0;
+        }
+
+        .modal-header h2 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #fff 0%, #10b981 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0;
+        }
+
+        /* ── Form Fields ── */
+        .bf-group {
+            margin-bottom: 18px;
+        }
+
+        .bf-group label {
+            display: block;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: #cbd5e1;
+            margin-bottom: 7px;
+            letter-spacing: 0.3px;
+        }
+
+        .bf-input-wrap {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .bf-input-wrap:focus-within {
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+        }
+
+        .bf-input-wrap .bf-icon {
+            padding: 0 12px;
+            color: #64748b;
+            font-size: 1rem;
+            flex-shrink: 0;
+        }
+
+        .bf-input-wrap input,
+        .bf-input-wrap select {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 12px 14px 12px 0;
+            color: #f8fafc;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.92rem;
+        }
+
+        .bf-input-wrap select {
+            cursor: pointer;
+            padding-left: 0;
+        }
+
+        .bf-input-wrap input::placeholder {
+            color: #475569;
+        }
+
+        .bf-input-wrap select option {
+            background: #0f172a;
+            color: #f8fafc;
+        }
+
+        /* Phone Row */
+        .phone-row {
+            display: flex;
+            align-items: center;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+            transition: border-color 0.2s, box-shadow 0.2s;
+        }
+
+        .phone-row:focus-within {
+            border-color: #10b981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+        }
+
+        .phone-prefix {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 12px 10px 12px 14px;
+            border-right: 1px solid rgba(255,255,255,0.1);
+            color: #94a3b8;
+            font-size: 0.88rem;
+            font-weight: 600;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .phone-row input {
+            flex: 1;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 12px 14px;
+            color: #f8fafc;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.92rem;
+        }
+
+        .phone-row input::placeholder { color: #475569; }
+
+        .wa-icon {
+            padding: 0 14px;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+        }
+
+        /* Two-column row */
+        .bf-row-2 {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        /* CNIC note */
+        .cnic-note {
+            font-size: 0.72rem;
+            color: #ef4444;
+            margin-top: 5px;
+            display: block;
+            font-style: italic;
+        }
+
+        /* Submit Button */
+        .bf-submit {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(135deg, #10b981, #059669);
+            color: #fff;
+            border: none;
+            border-radius: 10px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 0.95rem;
+            font-weight: 700;
+            letter-spacing: 1px;
+            cursor: pointer;
+            margin-top: 8px;
+            transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.3);
+        }
+
+        .bf-submit:hover {
+            background: linear-gradient(135deg, #059669, #047857);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 28px rgba(16, 185, 129, 0.45);
+        }
+
+        /* Success Message */
+        .booking-success {
+            display: none;
+            text-align: center;
+            padding: 30px 10px;
+        }
+
+        .booking-success .success-icon {
+            font-size: 3.5rem;
+            margin-bottom: 16px;
+        }
+
+        .booking-success h3 {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #10b981;
+            margin-bottom: 10px;
+        }
+
+        .booking-success p {
+            color: #94a3b8;
+            font-size: 0.95rem;
+            line-height: 1.6;
+        }
+
+        /* Responsive */
+        @media (max-width: 560px) {
+            .booking-modal { padding: 28px 20px 22px; }
+            .bf-row-2 { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 
 <body>
     <header>
         <div class="top-bar">
-            <span>info@pakistanroadtrips.pk |03000000000</span>
+            <span>pakistan.road.trip1@gmail.com | 03199819952</span>
         </div>
         <nav class="navbar">
-            <h1>Pakistan Road Trips</h1>
+            <h1><a href="index.html">Pakistan Road Trips</a></h1>
 
             <!-- Hamburger Menu Button -->
             <div class="menu-toggle" id="menu-toggle" aria-expanded="false"></div>
@@ -29,20 +309,470 @@
                 <li><a href="contact.html">Contact Us</a></li>
             </ul>
         </nav>
-
     </header>
+
+    <!-- Video Background -->
     <div class="video-background">
         <video autoplay loop muted playsinline>
             <source src="pics/background.mp4" type="video/mp4">
         </video>
     </div>
-     <footer>
-    <h4>Contact Info</h4>
-    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsa, illum.</p>
-    <p>&copy; 2023 pakistanroadtrips.pk All Rights Reserved.</p>
-  </footer>
-</body>
-<script src="script.js">
-</script>
 
+    <!-- Page Hero -->
+    <section style="text-align: center; padding: 60px 20px 40px; position: relative; z-index: 1;">
+        <h1 style="font-size: clamp(2.2rem, 5vw, 3.8rem); font-weight: 700; background: linear-gradient(135deg, #fff 0%, #10b981 100%); -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 16px;">
+            Our Tour Packages
+        </h1>
+        <p style="color: #94a3b8; font-size: 1.1rem; max-width: 620px; line-height: 1.7; margin: 0 auto;">
+            Discover our thoughtfully crafted tour packages designed to give you the ultimate Pakistan Road Trips experience.
+        </p>
+    </section>
+
+    <!-- Package Cards -->
+    <section style="position: relative; z-index: 1; padding-bottom: 80px;">
+        <div class="cards">
+
+            <!-- Package 1: Hunza Valley -->
+            <div class="card">
+                <div class="card-inner">
+                    <div class="card-front" style="background-image: url('pics/Fairy%20Meadows%20Hunza%20Tour.jpeg');">
+                        <h3>Hunza Autumn Tour</h3>
+                    </div>
+                    <div class="card-back">
+                        <h3>Hunza Autumn Tour</h3>
+                        <p>7 Days / 6 Nights</p>
+                        <p>Rs. 65,000 / Person</p>
+                        <p style="font-size: 0.9rem; margin-bottom: 10px;">Explore the vibrant colors of Hunza, Baltit Fort, and Attabad Lake.</p>
+                        <button class="book-now-btn" data-tour="Hunza Autumn Tour">Book Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Package 2: Fairy Meadows -->
+            <div class="card">
+                <div class="card-inner">
+                    <div class="card-front" style="background-image: url('pics/Fairy%20Meadows%205Days%20Tour.jpg');">
+                        <h3>Fairy Meadows Adventure</h3>
+                    </div>
+                    <div class="card-back">
+                        <h3>Fairy Meadows Adventure</h3>
+                        <p>5 Days / 4 Nights</p>
+                        <p>Rs. 45,000 / Person</p>
+                        <p style="font-size: 0.9rem; margin-bottom: 10px;">A thrilling jeep ride and trek to the magical Fairy Meadows at Nanga Parbat base.</p>
+                        <button class="book-now-btn" data-tour="Fairy Meadows Adventure">Book Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Package 3: Skardu Expedition -->
+            <div class="card">
+                <div class="card-inner">
+                    <div class="card-front" style="background-image: url('pics/skardu-valley.jpg');">
+                        <h3>Skardu Expedition</h3>
+                    </div>
+                    <div class="card-back">
+                        <h3>Skardu Expedition</h3>
+                        <p>8 Days / 7 Nights</p>
+                        <p>Rs. 85,000 / Person</p>
+                        <p style="font-size: 0.9rem; margin-bottom: 10px;">Experience Deosai Plains, Shangrila Resort, and the cold deserts of Skardu.</p>
+                        <button class="book-now-btn" data-tour="Skardu Expedition">Book Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Package 4: Swat Valley -->
+            <div class="card">
+                <div class="card-inner">
+                    <div class="card-front" style="background-image: url('pics/swat-valley.jpg');">
+                        <h3>Swat Summer Retreat</h3>
+                    </div>
+                    <div class="card-back">
+                        <h3>Swat Summer Retreat</h3>
+                        <p>4 Days / 3 Nights</p>
+                        <p>Rs. 35,000 / Person</p>
+                        <p style="font-size: 0.9rem; margin-bottom: 10px;">A peaceful escape to Malam Jabba, Kalam Valley, and Mahodand Lake.</p>
+                        <button class="book-now-btn" data-tour="Swat Summer Retreat">Book Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Package 5: Neelum Valley -->
+            <div class="card">
+                <div class="card-inner">
+                    <div class="card-front" style="background-image: url('pics/neelum-valley.jpg');">
+                        <h3>Neelum Valley Escapade</h3>
+                    </div>
+                    <div class="card-back">
+                        <h3>Neelum Valley Escapade</h3>
+                        <p>5 Days / 4 Nights</p>
+                        <p>Rs. 42,000 / Person</p>
+                        <p style="font-size: 0.9rem; margin-bottom: 10px;">Discover the lush green landscapes, Arang Kel, and Sharda in Kashmir.</p>
+                        <button class="book-now-btn" data-tour="Neelum Valley Escapade">Book Now</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Package 6: Naran Kaghan -->
+            <div class="card">
+                <div class="card-inner">
+                    <div class="card-front" style="background-image: url('pics/naran-kaghan.jpg');">
+                        <h3>Naran Kaghan Classic</h3>
+                    </div>
+                    <div class="card-back">
+                        <h3>Naran Kaghan Classic</h3>
+                        <p>3 Days / 2 Nights</p>
+                        <p>Rs. 25,000 / Person</p>
+                        <p style="font-size: 0.9rem; margin-bottom: 10px;">A quick getaway to Saif-ul-Malook, Lulusar Lake and Babusar Top.</p>
+                        <button class="book-now-btn" data-tour="Naran Kaghan Classic">Book Now</button>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </section>
+
+    <!-- ══════════ BOOKING FORM MODAL ══════════ -->
+    <div class="booking-overlay" id="bookingOverlay" role="dialog" aria-modal="true" aria-labelledby="booking-form-title">
+        <div class="booking-modal" id="booking-form">
+
+            <!-- Close -->
+            <button class="modal-close" id="modalClose" aria-label="Close booking form">&#10005;</button>
+
+            <!-- Header -->
+            <div class="modal-header">
+                <h2 id="booking-form-title">📋 Booking Request</h2>
+                <p class="modal-sub">Fill out the form below to secure your seat.</p>
+            </div>
+
+            <!-- Form -->
+            <form id="bookingForm" novalidate>
+
+                <!-- Hidden fields -->
+                <input type="hidden" id="bf-booking-id" name="bookingId">
+
+                <!-- Selected Tour -->
+                <div class="bf-group">
+                    <label for="bf-tour">Selected Tour:</label>
+                    <div class="bf-input-wrap">
+                        <span class="bf-icon">🗺️</span>
+                        <select id="bf-tour" name="tourName" required>
+                            <option value="" disabled selected>Choose your adventure...</option>
+                            <option value="Hunza Autumn Tour">Hunza Autumn Tour — 7 Days / Rs. 65,000</option>
+                            <option value="Fairy Meadows Adventure">Fairy Meadows Adventure — 5 Days / Rs. 45,000</option>
+                            <option value="Skardu Expedition">Skardu Expedition — 8 Days / Rs. 85,000</option>
+                            <option value="Swat Summer Retreat">Swat Summer Retreat — 4 Days / Rs. 35,000</option>
+                            <option value="Neelum Valley Escapade">Neelum Valley Escapade — 5 Days / Rs. 42,000</option>
+                            <option value="Naran Kaghan Classic">Naran Kaghan Classic — 3 Days / Rs. 25,000</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Full Name -->
+                <div class="bf-group">
+                    <label for="bf-name">Full Name: *</label>
+                    <div class="bf-input-wrap">
+                        <span class="bf-icon">👤</span>
+                        <input type="text" id="bf-name" name="customerName" placeholder="e.g., Ali Ahmed" required>
+                    </div>
+                </div>
+
+                <!-- WhatsApp -->
+                <div class="bf-group">
+                    <label for="bf-phone">WhatsApp Number: * <span style="color:#64748b;">(WhatsApp Preferred)</span></label>
+                    <div class="phone-row">
+                        <div class="phone-prefix">
+                            <span>🇵🇰</span>
+                            <span>+92 ▾</span>
+                        </div>
+                        <input type="tel" id="bf-phone" name="whatsapp" placeholder="300 1234567" maxlength="11" required>
+                        <span class="wa-icon" title="WhatsApp Preferred">💬</span>
+                    </div>
+                    <span style="font-size:0.68rem;color:#64748b;margin-top:4px;display:block;">Enter without leading zero e.g. 300 1234567</span>
+                </div>
+
+                <!-- Email -->
+                <div class="bf-group">
+                    <label for="bf-email">Email Address: *</label>
+                    <div class="bf-input-wrap">
+                        <span class="bf-icon">✉️</span>
+                        <input type="email" id="bf-email" name="email" placeholder="name@email.com" required>
+                    </div>
+                </div>
+
+                <!-- Departure City + Date -->
+                <div class="bf-row-2">
+                    <div class="bf-group">
+                        <label for="bf-city">Departure From: *</label>
+                        <div class="bf-input-wrap">
+                            <span class="bf-icon">🚌</span>
+                            <select id="bf-city" name="departureCity" required>
+                                <option value="" disabled selected>Select City</option>
+                                <option value="Islamabad">Islamabad (Centaurus / Daewoo)</option>
+                                <option value="Lahore">Lahore (Thokar Niaz Baig)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="bf-group">
+                        <label for="bf-date">Departure Date: *</label>
+                        <div class="bf-input-wrap">
+                            <span class="bf-icon">📅</span>
+                            <input type="date" id="bf-date" name="departureDate" required>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Seats + Room Category -->
+                <div class="bf-row-2">
+                    <div class="bf-group">
+                        <label for="bf-seats">Seats Required: *</label>
+                        <div class="bf-input-wrap">
+                            <span class="bf-icon">👥</span>
+                            <input type="number" id="bf-seats" name="seats" value="1" min="1" max="20" required>
+                        </div>
+                    </div>
+                    <div class="bf-group">
+                        <label for="bf-room">Room Category: *</label>
+                        <div class="bf-input-wrap">
+                            <span class="bf-icon">🛏️</span>
+                            <select id="bf-room" name="roomType" required>
+                                <option value="Quad Sharing">Quad Sharing (Standard)</option>
+                                <option value="Twin Sharing">Twin Sharing (Couples +addon)</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- CNIC -->
+                <div class="bf-group">
+                    <label for="bf-cnic">CNIC / Passport Number: *</label>
+                    <div class="bf-input-wrap">
+                        <span class="bf-icon">🪪</span>
+                        <input type="text" id="bf-cnic" name="cnic" placeholder="42101-1234567-1" required>
+                    </div>
+                    <span class="cnic-note">*Required for hotel check-ins &amp; security checkpoints (GB Region)*</span>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" class="bf-submit" id="bf-submit-btn">Secure My Seat</button>
+
+            </form>
+
+            <!-- Success Message -->
+            <div class="booking-success" id="bookingSuccess">
+                <div class="success-icon">🎉</div>
+                <h3>Booking Request Received!</h3>
+                <div id="bf-bid-display" style="display:inline-block;background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);border-radius:8px;padding:8px 20px;color:#10b981;font-weight:700;font-size:1.05rem;letter-spacing:1px;margin:8px 0 14px;"></div>
+                <p>Screenshot your Booking ID above — you will need it for <a href="payment.html" style="color:#10b981;">payment verification</a>.</p>
+                <p>Our team will contact you on <strong style="color:#10b981;">WhatsApp within 24 hours</strong> to confirm your seat and share bank details.</p>
+            </div>
+
+        </div>
+    </div>
+
+            <!-- Close -->
+            <button class="modal-close" id="modalClose" aria-label="Close booking form">&#10005;</button>
+
+            <!-- Header -->
+            <div class="modal-header">
+                <h2 id="booking-form-title">📋 Booking Request</h2>
+                <p class="modal-sub">Fill out the form below to secure your spot.</p>
+            </div>
+
+            <!-- Form -->
+            <form id="bookingForm" novalidate>
+
+                <!-- Selected Tour -->
+                <div class="bf-group">
+                    <label for="bf-tour">Selected Tour:</label>
+                    <div class="bf-input-wrap">
+                        <span class="bf-icon">🗺️</span>
+                        <select id="bf-tour" name="tour" required>
+                            <option value="" disabled selected>Choose your adventure...</option>
+                            <option value="Hunza Autumn Tour">Hunza Autumn Tour — 7 Days / Rs. 65,000</option>
+                            <option value="Fairy Meadows Adventure">Fairy Meadows Adventure — 5 Days / Rs. 45,000</option>
+                            <option value="Skardu Expedition">Skardu Expedition — 8 Days / Rs. 85,000</option>
+                            <option value="Swat Summer Retreat">Swat Summer Retreat — 4 Days / Rs. 35,000</option>
+                            <option value="Neelum Valley Escapade">Neelum Valley Escapade — 5 Days / Rs. 42,000</option>
+                            <option value="Naran Kaghan Classic">Naran Kaghan Classic — 3 Days / Rs. 25,000</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Full Name -->
+                <div class="bf-group">
+                    <label for="bf-name">Full Name:</label>
+                    <div class="bf-input-wrap">
+                        <span class="bf-icon">👤</span>
+                        <input type="text" id="bf-name" name="fullName" placeholder="Ali Khan" required>
+                    </div>
+                </div>
+
+                <!-- Contact Number -->
+                <div class="bf-group">
+                    <label for="bf-phone">Contact Number <span style="color:#64748b;">(WhatsApp Preferred):</span></label>
+                    <div class="phone-row">
+                        <div class="phone-prefix">
+                            <span>🇵🇰</span>
+                            <span>+92 ▾</span>
+                        </div>
+                        <input type="tel" id="bf-phone" name="phone" placeholder="300 1234567" maxlength="11" required>
+                        <span class="wa-icon" title="WhatsApp Preferred">💬</span>
+                    </div>
+                </div>
+
+                <!-- Email -->
+                <div class="bf-group">
+                    <label for="bf-email">Email Address:</label>
+                    <div class="bf-input-wrap">
+                        <span class="bf-icon">✉️</span>
+                        <input type="email" id="bf-email" name="email" placeholder="ali.khan@email.com" required>
+                    </div>
+                </div>
+
+                <!-- Travelers + CNIC (side by side) -->
+                <div class="bf-row-2">
+                    <div class="bf-group">
+                        <label for="bf-travelers">Number of Travelers:</label>
+                        <div class="bf-input-wrap">
+                            <span class="bf-icon">👥</span>
+                            <input type="number" id="bf-travelers" name="travelers" placeholder="2" min="1" max="30" required>
+                        </div>
+                    </div>
+
+                    <div class="bf-group">
+                        <label for="bf-cnic">CNIC / Passport Number:</label>
+                        <div class="bf-input-wrap">
+                            <span class="bf-icon">🪪</span>
+                            <input type="text" id="bf-cnic" name="cnic" placeholder="42101-1234567-1" required>
+                        </div>
+                        <span class="cnic-note">*Crucial for hotel check-ins &amp; security checkpoints (GB Region)*</span>
+                    </div>
+                </div>
+
+                <!-- Departure Date -->
+                <div class="bf-group">
+                    <label for="bf-date">Preferred Departure Date:</label>
+                    <div class="bf-input-wrap">
+                        <span class="bf-icon">📅</span>
+                        <input type="date" id="bf-date" name="departureDate" required>
+                    </div>
+                </div>
+
+                <!-- Submit -->
+                <button type="submit" class="bf-submit" id="bf-submit-btn">SEND BOOKING REQUEST</button>
+
+            </form>
+
+            <!-- Success Message (hidden by default) -->
+            <div class="booking-success" id="bookingSuccess">
+                <div class="success-icon">✅</div>
+                <h3>Booking Request Sent!</h3>
+                <p>Thank you! Our team will contact you on WhatsApp within 24 hours to confirm your tour details.</p>
+            </div>
+
+        </div>
+    </div>
+
+    <footer>
+        <h4>Contact Info</h4>
+        <p>📞 03199819952 &nbsp;|&nbsp; ✉️ pakistan.road.trip1@gmail.com</p>
+        <p>&copy; 2025 pakistanroadtrips.pk All Rights Reserved.</p>
+    </footer>
+
+    <script src="script.js"></script>
+    <script>
+        // ── CONFIG: Replace with your Make.com webhook URL after setup ──
+        const MAKE_BOOKING_WEBHOOK = 'YOUR_MAKE_WEBHOOK_URL';
+
+        const overlay       = document.getElementById('bookingOverlay');
+        const modalClose    = document.getElementById('modalClose');
+        const tourSelect    = document.getElementById('bf-tour');
+        const bookingForm   = document.getElementById('bookingForm');
+        const bookingSuccess = document.getElementById('bookingSuccess');
+        const dateInput     = document.getElementById('bf-date');
+
+        // Set min date to today
+        dateInput.setAttribute('min', new Date().toISOString().split('T')[0]);
+
+        // Open modal when any "Book Now" card button is clicked
+        document.querySelectorAll('.book-now-btn').forEach(btn => {
+            btn.addEventListener('click', function (e) {
+                e.stopPropagation();
+                const tourName = this.getAttribute('data-tour');
+                // Pre-select tour + generate booking ID
+                tourSelect.value = tourName;
+                const bid = 'PKR-' + Math.floor(100000 + Math.random() * 900000);
+                document.getElementById('bf-booking-id').value = bid;
+                // Reset view
+                bookingForm.style.display = 'block';
+                bookingSuccess.style.display = 'none';
+                overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            });
+        });
+
+        modalClose.addEventListener('click', closeModal);
+        overlay.addEventListener('click', e => { if (e.target === overlay) closeModal(); });
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
+
+        function closeModal() {
+            overlay.classList.remove('active');
+            document.body.style.overflow = '';
+        }
+
+        // Form submission → Make.com webhook
+        bookingForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            if (!bookingForm.checkValidity()) { bookingForm.reportValidity(); return; }
+
+            const submitBtn = document.getElementById('bf-submit-btn');
+            const originalText = submitBtn.textContent;
+            submitBtn.textContent = 'Processing Reservation...';
+            submitBtn.disabled = true;
+
+            // Normalise WhatsApp number: strip leading 0, prepend +92
+            const rawPhone = document.getElementById('bf-phone').value.trim().replace(/^0/, '');
+            const whatsapp = '+92' + rawPhone;
+
+            const bookingId = document.getElementById('bf-booking-id').value;
+
+            const payload = {
+                bookingId,
+                tourName:       tourSelect.value,
+                customerName:   document.getElementById('bf-name').value,
+                whatsappNumber: whatsapp,
+                email:          document.getElementById('bf-email').value,
+                departureCity:  document.getElementById('bf-city').value,
+                departureDate:  document.getElementById('bf-date').value,
+                seats:          parseInt(document.getElementById('bf-seats').value, 10),
+                roomType:       document.getElementById('bf-room').value,
+                cnic:           document.getElementById('bf-cnic').value,
+                timestamp:      new Date().toISOString()
+            };
+
+            try {
+                if (MAKE_BOOKING_WEBHOOK && MAKE_BOOKING_WEBHOOK !== 'YOUR_MAKE_WEBHOOK_URL') {
+                    const res = await fetch(MAKE_BOOKING_WEBHOOK, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!res.ok) throw new Error('Network error');
+                }
+                // Show success + booking ID
+                document.getElementById('bf-bid-display').textContent = bookingId;
+                bookingForm.style.display = 'none';
+                bookingSuccess.style.display = 'block';
+                bookingForm.reset();
+            } catch (err) {
+                console.error('Booking error:', err);
+                alert('⚠️ System error. Please try again or contact us on WhatsApp: 03199819952');
+            } finally {
+                submitBtn.textContent = originalText;
+                submitBtn.disabled = false;
+            }
+        });
+    </script>
+
+</body>
 </html>
