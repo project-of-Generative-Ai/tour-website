@@ -305,6 +305,7 @@
                 <li><a href="activity.html">Activity</a></li>
                 <li><a href="tour.html">Tours</a></li>
                 <li><a href="packages.html">Tour Packages</a></li>
+                <li><a href="confirm-payment.html">Confirm Payment</a></li>
                 <li><a href="blog.html">Blog</a></li>
                 <li><a href="contact.html">Contact Us</a></li>
             </ul>
@@ -682,7 +683,7 @@
     <script src="script.js"></script>
     <script>
         // ── CONFIG: Replace with your Make.com webhook URL after setup ──
-        const MAKE_BOOKING_WEBHOOK = 'YOUR_MAKE_WEBHOOK_URL';
+        const MAKE_BOOKING_WEBHOOK = 'https://hook.eu1.make.com/ufhc2emwxbdoop5mcrqfoe031qvmwgqw';
 
         const overlay       = document.getElementById('bookingOverlay');
         const modalClose    = document.getElementById('modalClose');
@@ -744,13 +745,23 @@
                 email:          document.getElementById('bf-email').value,
                 departureCity:  document.getElementById('bf-city').value,
                 departureDate:  document.getElementById('bf-date').value,
-                seats:          parseInt(document.getElementById('bf-seats').value, 10),
+                seats:          parseInt(document.getElementById('bf-seats').value, 10) || 1,
                 roomType:       document.getElementById('bf-room').value,
                 cnic:           document.getElementById('bf-cnic').value,
                 timestamp:      new Date().toISOString()
             };
 
+            // Persist locally (simple client-side storage) so automation can pick it up later
             try {
+                const existing = JSON.parse(localStorage.getItem('bookings') || '[]');
+                existing.push(payload);
+                localStorage.setItem('bookings', JSON.stringify(existing));
+            } catch (storageErr) {
+                console.warn('Could not save booking to localStorage:', storageErr);
+            }
+
+            try {
+                // Send to automation webhook if configured
                 if (MAKE_BOOKING_WEBHOOK && MAKE_BOOKING_WEBHOOK !== 'YOUR_MAKE_WEBHOOK_URL') {
                     const res = await fetch(MAKE_BOOKING_WEBHOOK, {
                         method: 'POST',
@@ -759,6 +770,7 @@
                     });
                     if (!res.ok) throw new Error('Network error');
                 }
+
                 // Show success + booking ID
                 document.getElementById('bf-bid-display').textContent = bookingId;
                 bookingForm.style.display = 'none';
@@ -766,7 +778,7 @@
                 bookingForm.reset();
             } catch (err) {
                 console.error('Booking error:', err);
-                alert('⚠️ System error. Please try again or contact us on WhatsApp: 03199819952');
+                alert('⚠️ System error sending booking. Your booking was saved locally. Please contact us on WhatsApp: 03199819952');
             } finally {
                 submitBtn.textContent = originalText;
                 submitBtn.disabled = false;
