@@ -79,8 +79,6 @@
   border-radius: 20px; padding: 5px 14px;
   font-size: 0.82rem; font-weight: 600;
 }
-
-<<<<<<< HEAD
 /* Main Destination Image */
 .dest-main-img {
   width: 100%; max-width: 900px;
@@ -91,9 +89,7 @@
   display: block;
   position: relative; z-index: 1;
   box-shadow: 0 10px 30px rgba(0,0,0,0.5);
-}
-=======
-/* Image placeholder */
+}/* Image placeholder */
 .dest-img-placeholder {
   width: 100%; max-width: 900px;
   margin: 0 auto 60px;
@@ -107,7 +103,6 @@
   font-size: 0.9rem; position: relative; z-index: 1;
 }
 .dest-img-placeholder .ph-icon { font-size: 3rem; opacity: 0.4; }
->>>>>>> b7cc94af6412f3fb778e6e7855748880b179fb06
 
 /* Content */
 .dest-content {

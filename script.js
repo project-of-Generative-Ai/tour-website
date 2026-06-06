@@ -16,16 +16,11 @@ document.addEventListener("DOMContentLoaded",
                         e.addEventListener("click",
                             () => { window.innerWidth <= 768 && (t.classList.remove("active"), n.classList.remove("active")) })
                     })),
-                    document.querySelectorAll(".card-back button").forEach(btn => {
-                        btn.classList.add("btn-book-tour");
-                        btn.addEventListener("click", () => {
-                            const cardBack = btn.closest(".card-back");
-                            const tourName = cardBack?.querySelector("h3")?.innerText?.trim() || "Pakistan Road Trip Package";
-                            if (typeof window.openBookingModal === "function") {
-                                window.openBookingModal(tourName);
-                            } else {
-                                alert("Booking is loading. Please refresh the page and try again.");
-                            }
-                        });
+                    document.querySelectorAll(".card button").forEach(e => {
+                        e.addEventListener("click",
+                            () => {
+                                const t = e.parentElement, n = t.querySelector("h3")?.innerText || "", c = t.querySelectorAll("p"), r = c[0]?.innerText,
+                                a = c[1]?.innerText; alert(`Tour Selected:\n${n}\nDuration: ${r}\nPrice: ${a}`)
+                            })
                     })
         });
