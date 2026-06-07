@@ -174,7 +174,8 @@
       if (!isWebhookConfigured(makeWebhookUrl)) {
         alert(
           'Booking saved locally for testing. Add your Make.com booking webhook URL in automation-config.js.\n\nYour Booking ID: ' +
-            bookingPayload.bookingId
+            bookingPayload.bookingId +
+            '\nYou will receive a confirmation email with payment instructions once the booking is confirmed.'
         );
         console.log('Booking payload (configure webhook):', bookingPayload);
         form.reset();
@@ -195,9 +196,7 @@
           alert(
             'Booking request received! Your Booking ID is ' +
               bookingPayload.bookingId +
-              '. Check WhatsApp (' +
-              document.getElementById('userWhatsApp').value +
-              ') for confirmation and payment instructions.'
+              '. You will receive a confirmation email with payment instructions shortly.'
           );
           form.reset();
           closeBookingModal();

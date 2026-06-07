@@ -29,7 +29,7 @@
         <li><a href="activity.html">Activity</a></li>
         <li><a href="tour.html">Tours</a></li>
         <li><a href="packages.html">Tour Packages</a></li>
-        <li><a href="confirm-payment.html">Confirm Payment</a></li>
+        <li><a href="confirm-payment.html">Confirm Payment</a></li> 
         <li><a href="blog.html">Blog</a></li
         <li><a href="contact.html">Contact Us</a></li>
       </ul>
@@ -39,9 +39,8 @@
   <section class="page-form-section">
     <h2>Confirm Payment</h2>
     <p class="form-hint">
-      After reserving your seat, transfer the amount using the bank details sent to your email or WhatsApp.
-      Upload your payment screenshot here (max 5 MB). Use the Booking ID from your confirmation message (e.g.
-      PKR-123456).
+      After reserving your seat, your payment details will be sent in the first confirmation email.
+      Please enter your Booking ID from the confirmation message (e.g. PKR-123456).
     </p>
     <form id="paymentUploadForm">
       <div class="form-group">
@@ -49,11 +48,7 @@
         <input type="text" id="payBookingId" placeholder="e.g., PKR-123456" required pattern="PKR-[0-9]{6}"
           title="Format: PKR- followed by 6 digits" />
       </div>
-      <div class="form-group">
-        <label for="receiptFile">Upload Screenshot of Bank Transfer / JazzCash Receipt *</label>
-        <input type="file" id="receiptFile" accept="image/*,application/pdf" required />
-      </div>
-      <button type="submit" id="paySubmitBtn" class="btn-submit">Submit Proof of Payment</button>
+      <button type="submit" id="paySubmitBtn" class="btn-submit">Submit Booking ID</button>
     </form>
   </section>
 
