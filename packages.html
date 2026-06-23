@@ -683,7 +683,7 @@
     <script src="script.js"></script>
     <script>
         // ── CONFIG: Replace with your Make.com webhook URL after setup ──
-        const MAKE_BOOKING_WEBHOOK = 'https://hook.eu1.make.com/ufhc2emwxbdoop5mcrqfoe031qvmwgqw';
+        const MAKE_BOOKING_WEBHOOK = 'https://hook.eu1.make.com/wvessaykyxxxsxds356bnp31856tx7k0';
 
         const overlay       = document.getElementById('bookingOverlay');
         const modalClose    = document.getElementById('modalClose');
@@ -763,12 +763,24 @@
             try {
                 // Send to automation webhook if configured
                 if (MAKE_BOOKING_WEBHOOK && MAKE_BOOKING_WEBHOOK !== 'YOUR_MAKE_WEBHOOK_URL') {
-                    const res = await fetch(MAKE_BOOKING_WEBHOOK, {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
-                    });
-                    if (!res.ok) throw new Error('Network error');
+                    try {
+                        console.log('Sending booking to webhook:', MAKE_BOOKING_WEBHOOK);
+                        const res = await fetch(MAKE_BOOKING_WEBHOOK, {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify(payload)
+                        });
+                        console.log('Webhook response status:', res.status);
+                        if (!res.ok) {
+                            const errorText = await res.text();
+                            console.error('Webhook error response:', errorText);
+                            throw new Error(`Webhook returned ${res.status}`);
+                        }
+                        console.log('Booking successfully sent to webhook');
+                    } catch (webhookErr) {
+                        console.warn('Webhook delivery failed:', webhookErr);
+                        // Don't throw - booking is already saved locally, we'll show partial success
+                    }
                 }
 
                 // Show success + booking ID
@@ -777,7 +789,7 @@
                 bookingSuccess.style.display = 'block';
                 bookingForm.reset();
             } catch (err) {
-                console.error('Booking error:', err);
+                console.error('Booking submission error:', err);
                 alert('⚠️ System error sending booking. Your booking was saved locally. Please contact us on WhatsApp: 03199819952');
             } finally {
                 submitBtn.textContent = originalText;

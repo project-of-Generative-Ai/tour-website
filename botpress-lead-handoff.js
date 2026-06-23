@@ -14,7 +14,7 @@ const payload = {
   timestamp: new Date().toISOString()
 };
 
-const webhookUrl = 'https://hook.eu1.make.com/ufhc2emwxbdoop5mcrqfoe031qvmwgqw';
+const webhookUrl = 'https://hook.eu1.make.com/wvessaykyxxxsxds356bnp31856tx7k0';
 
 try {
   await axios.post(webhookUrl, payload, {
