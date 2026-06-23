@@ -295,16 +295,25 @@
       gap: 12px;
       justify-content: center;
       flex-wrap: wrap;
+      max-width: 680px;
+      margin: 0 auto;
     }
 
     .nl-form input {
       padding: 13px 20px;
       border-radius: 10px;
-      border: none;
+      border: 2px solid transparent;
       font-family: inherit;
       font-size: 0.95rem;
-      width: 280px;
+      width: 210px;
       outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      background: #fff;
+    }
+
+    .nl-form input:focus {
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(212,160,51,0.18);
     }
 
     .nl-form button {
@@ -317,12 +326,50 @@
       font-weight: 600;
       font-size: 0.95rem;
       cursor: pointer;
-      transition: background 0.2s;
+      transition: background 0.2s, transform 0.15s;
+      white-space: nowrap;
     }
 
     .nl-form button:hover {
       background: #b5802f;
+      transform: translateY(-1px);
     }
+
+    .nl-form button:disabled {
+      opacity: 0.65;
+      cursor: not-allowed;
+      transform: none;
+    }
+
+    /* Toast notification */
+    #nl-toast {
+      position: fixed;
+      bottom: 28px;
+      left: 50%;
+      transform: translateX(-50%) translateY(80px);
+      background: #1a1a2e;
+      color: #fff;
+      padding: 14px 28px;
+      border-radius: 12px;
+      font-size: 0.95rem;
+      font-family: inherit;
+      box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+      z-index: 9999;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    #nl-toast.show {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    #nl-toast.success { border-left: 4px solid #22c55e; }
+    #nl-toast.error   { border-left: 4px solid #ef4444; }
 
     /* ── Responsive ── */
     @media (max-width: 768px) {
@@ -829,12 +876,16 @@
   <!-- ── NEWSLETTER ── -->
   <section class="blog-newsletter">
     <h2>Get Our Travel Guides in Your Inbox</h2>
-    <p>Monthly destination deep-dives, packing lists, and early-bird package offers — straight to you.</p>
+    <p>Weekly blog highlights, destination deep-dives, packing lists, and early-bird package offers — straight to your inbox every week.</p>
     <div class="nl-form">
-      <input type="email" placeholder="your@email.com" aria-label="Email address">
-      <button type="button">Subscribe Free</button>
+      <input type="text"  id="nl-name"  placeholder="Your name"        aria-label="Your full name">
+      <input type="email" id="nl-email" placeholder="your@email.com"   aria-label="Email address">
+      <button type="button" id="nl-subscribe-btn" onclick="handleNewsletterSubscribe()">Subscribe Free</button>
     </div>
   </section>
+
+  <!-- Toast -->
+  <div id="nl-toast" role="status" aria-live="polite"></div>
 
   <!-- ── FOOTER ── -->
   <footer>
@@ -876,6 +927,80 @@
         });
       });
     });
+  </script>
+
+  <!-- ── NEWSLETTER WEBHOOK ── -->
+  <script>
+    const NL_WEBHOOK = 'https://hook.eu1.make.com/wvessaykyxxxsxds356bnp31856tx7k0';
+
+    function showToast(message, type) {
+      const toast = document.getElementById('nl-toast');
+      toast.textContent = '';
+      const icon = document.createElement('span');
+      icon.textContent = type === 'success' ? '✅' : '❌';
+      const text = document.createElement('span');
+      text.textContent = message;
+      toast.appendChild(icon);
+      toast.appendChild(text);
+      toast.className = 'show ' + type;
+      clearTimeout(toast._timer);
+      toast._timer = setTimeout(() => { toast.className = ''; }, 4500);
+    }
+
+    async function handleNewsletterSubscribe() {
+      const nameEl  = document.getElementById('nl-name');
+      const emailEl = document.getElementById('nl-email');
+      const btn     = document.getElementById('nl-subscribe-btn');
+
+      const name  = nameEl.value.trim();
+      const email = emailEl.value.trim();
+
+      // Basic validation
+      if (!name) {
+        nameEl.focus();
+        showToast('Please enter your name.', 'error');
+        return;
+      }
+      if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        emailEl.focus();
+        showToast('Please enter a valid email address.', 'error');
+        return;
+      }
+
+      btn.disabled = true;
+      btn.textContent = 'Subscribing…';
+
+      try {
+        const payload = {
+          name        : name,
+          email       : email,
+          source      : 'blog_newsletter',
+          subscribed_at: new Date().toISOString(),
+          frequency   : 'weekly'
+        };
+
+        const res = await fetch(NL_WEBHOOK, {
+          method : 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body   : JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          showToast('🎉 Subscribed! Check your inbox every week for new blogs.', 'success');
+          nameEl.value  = '';
+          emailEl.value = '';
+          btn.textContent = '✔ Subscribed!';
+          setTimeout(() => { btn.textContent = 'Subscribe Free'; btn.disabled = false; }, 3500);
+        } else {
+          throw new Error('Webhook responded with ' + res.status);
+        }
+      } catch (err) {
+        console.error('Newsletter subscription error:', err);
+        showToast('Something went wrong. Please try again.', 'error');
+        btn.textContent = 'Subscribe Free';
+        btn.disabled = false;
+      }
+    }
   </script>
 
 </body>
