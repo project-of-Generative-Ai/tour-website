@@ -1,60 +1,718 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="style.css">
+  <title>Blog | Pakistan Road Trips</title>
+  <style>
+    /* ─── Blog-specific styles (appended safely alongside style.css) ─── */
+
+    /* Use the shared site font and palette from style.css */
+    :root {
+      --emerald: var(--primary-color);
+      --emerald-lt: var(--primary-hover);
+      --gold: var(--accent-color);
+      --ink: var(--text-main);
+      --mist: rgba(255,255,255,0.08);
+      --slate: var(--text-muted);
+      --card-bg: rgba(15, 23, 42, 0.92);
+      --radius: 14px;
+      --shadow: 0 4px 30px rgba(0,0,0,0.25);
+    }
+
+    /* ── Hero ── */
+    .blog-hero {
+      position: relative;
+      background: linear-gradient(135deg, rgba(15, 23, 42, 0.95) 0%, rgba(16, 185, 129, 0.14) 45%, rgba(15, 23, 42, 0.95) 100%);
+      padding: 110px 24px 80px;
+      text-align: center;
+      overflow: hidden;
+    }
+    .blog-hero::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+    }
+    .blog-hero-eyebrow {
+      display: inline-block;
+      background: rgba(16, 185, 129, 0.15);
+      color: var(--primary-color);
+      font-family: inherit;
+      font-size: 0.78rem;
+      font-weight: 600;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      padding: 6px 18px;
+      border-radius: 100px;
+      margin-bottom: 20px;
+      border: 1px solid rgba(16, 185, 129, 0.28);
+    }
+    .blog-hero h1 {
+      font-family: inherit;
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      color: #fff;
+      margin: 0 0 18px;
+      line-height: 1.2;
+    }
+    .blog-hero p {
+      font-family: inherit;
+      color: rgba(255,255,255,0.72);
+      font-size: 1.05rem;
+      max-width: 560px;
+      margin: 0 auto;
+      line-height: 1.7;
+    }
+
+    /* ── Filter chips ── */
+    .blog-filters {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      padding: 36px 24px 0;
+      background: var(--glass-bg);
+      border: 1px solid var(--glass-border);
+      border-radius: var(--radius);
+      box-shadow: var(--glass-shadow);
+    }
+    .filter-chip {
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 500;
+      padding: 7px 18px;
+      border-radius: 100px;
+      border: 1.5px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.06);
+      color: var(--text-main);
+      cursor: pointer;
+      transition: all 0.2s;
+    }
+    .filter-chip.active,
+    .filter-chip:hover {
+      background: var(--emerald);
+      color: #fff;
+      border-color: var(--emerald);
+    }
+
+    /* ── Grid wrapper ── */
+    .blog-section {
+      background: rgba(15, 23, 42, 0.95);
+      padding: 48px 24px 80px;
+    }
+    .blog-grid {
+      max-width: 1180px;
+      margin: 0 auto;
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 32px;
+    }
+
+    /* ── Featured post (full-width first card) ── */
+    .blog-card {
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.25s, box-shadow 0.25s;
+    }
+    .blog-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 12px 40px rgba(0,0,0,0.13);
+    }
+    .blog-card.featured {
+      grid-column: 1 / -1;
+      flex-direction: row;
+    }
+    .blog-card.featured .card-img-wrap {
+      flex: 0 0 48%;
+      max-height: 420px;
+    }
+    .blog-card.featured .card-body {
+      padding: 44px 40px;
+    }
+    .blog-card.featured .card-excerpt {
+      font-size: 1.02rem;
+      -webkit-line-clamp: 6;
+    }
+
+    /* ── Card image ── */
+    .card-img-wrap {
+      position: relative;
+      overflow: hidden;
+      height: 220px;
+    }
+    .card-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      transition: transform 0.45s;
+    }
+    .blog-card:hover .card-img-wrap img {
+      transform: scale(1.05);
+    }
+    .card-tag {
+      position: absolute;
+      top: 14px;
+      left: 14px;
+      background: var(--emerald);
+      color: #fff;
+      font-family: inherit;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 5px 12px;
+      border-radius: 100px;
+    }
+
+    /* ── Card body ── */
+    .card-body {
+      padding: 26px 28px 28px;
+      display: flex;
+      flex-direction: column;
+      flex: 1;
+    }
+    .card-meta {
+      font-size: 0.78rem;
+      color: #94a3b8;
+      margin-bottom: 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .card-meta span::before {
+      content: '·';
+      margin-right: 10px;
+    }
+    .card-meta span:first-child::before { content: ''; }
+    .card-title {
+      font-family: inherit;
+      font-size: 1.3rem;
+      font-weight: 700;
+      color: #fff;
+      margin: 0 0 14px;
+      line-height: 1.35;
+    }
+    .card-excerpt {
+      font-family: inherit;
+      font-size: 0.92rem;
+      color: rgba(248,248,252,0.85);
+      line-height: 1.75;
+      flex: 1;
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+    }
+    .card-footer {
+      margin-top: 22px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .card-read-more {
+      font-family: inherit;
+      font-size: 0.85rem;
+      font-weight: 600;
+      color: var(--emerald);
+      text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      transition: gap 0.2s;
+    }
+    .card-read-more:hover { gap: 10px; }
+    .card-read-more svg {
+      width: 16px; height: 16px;
+      stroke: var(--emerald);
+    }
+    .card-min {
+      font-family: inherit;
+      font-size: 0.78rem;
+      color: #94a3b8;
+    }
+
+    /* ── Newsletter strip ── */
+    .blog-newsletter {
+      background: linear-gradient(135deg, var(--primary-color) 0%, rgba(15, 23, 42, 0.95) 100%);
+      padding: 64px 24px;
+      text-align: center;
+    }
+    .blog-newsletter h2 {
+      font-family: inherit;
+      color: #fff;
+      font-size: clamp(1.6rem, 3vw, 2.2rem);
+      margin: 0 0 12px;
+    }
+    .blog-newsletter p {
+      font-family: inherit;
+      color: rgba(255,255,255,0.75);
+      margin: 0 auto 28px;
+      max-width: 480px;
+      font-size: 0.97rem;
+    }
+    .nl-form {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .nl-form input {
+      padding: 13px 20px;
+      border-radius: 10px;
+      border: none;
+      font-family: inherit;
+      font-size: 0.95rem;
+      width: 280px;
+      outline: none;
+    }
+    .nl-form button {
+      padding: 13px 28px;
+      background: var(--gold);
+      color: #fff;
+      border: none;
+      border-radius: 10px;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.2s;
+    }
+    .nl-form button:hover { background: #b5802f; }
+
+    /* ── Responsive ── */
+    @media (max-width: 768px) {
+      .blog-card.featured {
+        flex-direction: column;
+      }
+      .blog-card.featured .card-img-wrap {
+        flex: none;
+        max-height: 240px;
+      }
+      .blog-card.featured .card-body {
+        padding: 26px 22px;
+      }
+      .blog-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
 </head>
 <body>
-      <header>
+
+  <!-- ── HEADER ── -->
+  <header>
     <div class="top-bar">
       <span>pakistan.road.trip1@gmail.com | 03199819952</span>
     </div>
-     <nav class="navbar">
-  <h1>Pakistan Road Trips</h1>
-
-  <!-- Hamburger Menu Button -->
-  <div class="menu-toggle" id="menu-toggle" aria-expanded="false"></div>
-
-  <!-- Navigation Links -->
-  <ul class="nav-links" id="nav-links">
-    <li><a href="index.html">Home</a></li>
-    <li><a href="activity.html">Activity</a></li>
-    <li><a href="tour.html">Tours</a></li>
-    <li><a href="packages.html">Tour Packages</a></li>
-    <li><a href="blog.html">Blog</a></li>
-    <li><a href="contact.html">Contact Us</a></li>
-  </ul>
-</nav>
-
+    <nav class="navbar">
+      <h1><a href="index.html">Pakistan Road Trips</a></h1>
+        <li><a href="packages.html">Tour Packages</a></li>
+        <li><a href="blog.html" class="active">Blog</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+      </ul>
+    </nav>
   </header>
+
+  <!-- ── VIDEO BACKGROUND ── -->
   <div class="video-background">
     <video autoplay loop muted playsinline>
       <source src="pics/background.mp4" type="video/mp4">
     </video>
   </div>
-    <section class="blog">
-    <h2>Our Blog</h2>
-    <div class="post">
-      <h3>Best Tour Company In Pakistan</h3>
-      <p>Pakistan’s natural beauty and cultural heritage make it a fantastic country to explore...</p>
-    </div>
-    <div class="post">
-      <h3>Best Time To Visit Naran Kaghan</h3>
-      <p>The best time to visit Naran Kaghan Valley is the summer season...</p>
-    </div>
-    <div class="post">
-      <h3>NARAN KAGHAN - "Switzerland of Pakistan"</h3>
-      <p>Naran Kaghan is the best place for a couple’s honeymoon...</p>
+
+  <!-- ── BLOG HERO ── -->
+  <section class="blog-hero">
+    <div class="blog-hero-eyebrow">Travel Stories & Tips</div>
+    <h1>Pakistan Road Trips Journal</h1>
+    <p>Insider guides, destination deep-dives, and trip-planning advice from Pakistan's premier road-trip specialists.</p>
+  </section>
+
+  <!-- ── FILTER CHIPS ── -->
+  <div class="blog-filters">
+    <button class="filter-chip active">All Posts</button>
+    <button class="filter-chip">Hunza & Gilgit-Baltistan</button>
+    <button class="filter-chip">KPK Valleys</button>
+    <button class="filter-chip">Azad Kashmir</button>
+    <button class="filter-chip">Trekking & Adventure</button>
+    <button class="filter-chip">Travel Tips</button>
+  </div>
+
+  <!-- ── BLOG GRID ── -->
+  <section class="blog-section">
+    <div class="blog-grid">
+
+      <!-- ── POST 1: FEATURED ── -->
+      <article class="blog-card featured">
+        <div class="card-img-wrap">
+          <img src="pics/Fairy Meadows Hunza Tour.jpeg" alt="Hunza Valley" onerror="this.style.background='linear-gradient(135deg,#1a6b45,#0f3d26)';this.removeAttribute('src')">
+          <span class="card-tag">Featured</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span>June 2025</span>
+            <span>Hunza & Gilgit-Baltistan</span>
+            <span>8 min read</span>
+          </div>
+          <h2 class="card-title">Why Hunza Valley Is the Crown Jewel of Pakistani Tourism</h2>
+          <p class="card-excerpt">
+            Perched at over 2,400 metres in Gilgit-Baltistan, Hunza Valley has enchanted explorers, photographers, and adventurers for centuries — and it has only become more accessible. Ancient Baltit Fort, standing sentinel over the valley for 700 years, offers a window into the proud Hunzai civilization that once ruled these mountains. Below it, Attabad Lake shimmers in an impossible shade of turquoise, born from a 2010 landslide that reshaped the landscape. The cherry blossom season (March–April) transforms every village into a pink-white dreamscape that rivals Japan's famous festivals. Our 7-Day Hunza Autumn Tour pairs cultural depth with high-altitude scenery: you will walk narrow bazaar lanes in Karimabad, sip walnut tea with local families, and watch the sunset paint Ultar Sar in shades of amber — all within a package crafted for maximum comfort and minimum hassle.
+          </p>
+          <div class="card-footer">
+            <a class="card-read-more" href="tour.html#hunza-valley">
+              Read Full Guide
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <span class="card-min">Featured Story</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── POST 2 ── -->
+      <article class="blog-card">
+        <div class="card-img-wrap">
+          <img src="pics/Fairy Meadows 5Days Tour.jpg" alt="Fairy Meadows" onerror="this.style.background='linear-gradient(135deg,#1a6b45,#22a065)';this.removeAttribute('src')">
+          <span class="card-tag">Adventure</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span>May 2025</span>
+            <span>Fairy Meadows</span>
+            <span>6 min read</span>
+          </div>
+          <h3 class="card-title">Fairy Meadows: The Trek to Nanga Parbat's Base Camp</h3>
+          <p class="card-excerpt">
+            The road to Fairy Meadows is not for the faint-hearted — a narrow, unpaved jeep track clings to a cliff above the Indus gorge — but the reward is one of the world's most dramatic landscapes. At the edge of the meadow, Nanga Parbat (8,126 m), the "Killer Mountain," fills the entire horizon. Our 5-Day Fairy Meadows Adventure includes the jeep ride from Raikot Bridge, a guided forest trek to the base camp viewpoint, camping under a star-blanketed sky, and a sunrise moment that will stay with you for life. The best window is June to September when the wildflower carpet is at full bloom. Fitness level required: moderate — the trek is 5 km each way through pine forest at 3,300 m elevation.
+          </p>
+          <div class="card-footer">
+            <a class="card-read-more" href="tour.html#fairy-meadows">
+              Read Full Guide
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <span class="card-min">6 min read</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── POST 3 ── -->
+      <article class="blog-card">
+        <div class="card-img-wrap">
+          <img src="pics/naran-kaghan.jpg" alt="Naran Kaghan" onerror="this.style.background='linear-gradient(135deg,#0d2b1a,#1a6b45)';this.removeAttribute('src')">
+          <span class="card-tag">Family Trips</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span>April 2025</span>
+            <span>KPK Valleys</span>
+            <span>5 min read</span>
+          </div>
+          <h3 class="card-title">Best Time to Visit Naran Kaghan — A Month-by-Month Guide</h3>
+          <p class="card-excerpt">
+            Naran Kaghan is Pakistan's most beloved summer retreat, and for good reason: Lake Saif-ul-Malook at sunrise is one of those sights that stops conversation entirely. The prime window runs from June to August when Babusar Top (4,173 m) is snow-free and Lulusar Lake glitters under clear skies. July brings the Mahodand Lake crowds, so consider our shoulder-season 3-Day Naran Kaghan Classic in late June or early September for fewer visitors and competitive pricing at Rs. 25,000 per person. October brings the golden-larch season — arguably the most photogenic of all — though some high passes close by late October. We advise against November to May; the valley receives heavy snowfall and most hotels shut for winter.
+          </p>
+          <div class="card-footer">
+            <a class="card-read-more" href="tour.html#naran-kaghan">
+              Read Full Guide
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <span class="card-min">5 min read</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── POST 4 ── -->
+      <article class="blog-card">
+        <div class="card-img-wrap">
+          <img src="pics/skardu-valley.jpg" alt="Skardu" onerror="this.style.background='linear-gradient(135deg,#1c3a5e,#2d6a9f)';this.removeAttribute('src')">
+          <span class="card-tag">Gilgit-Baltistan</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span>March 2025</span>
+            <span>Skardu</span>
+            <span>7 min read</span>
+          </div>
+          <h3 class="card-title">Skardu Valley: Deserts, Lakes & the Gateway to K2</h3>
+          <p class="card-excerpt">
+            Skardu is where the high-altitude desert meets the world's most dramatic mountain range. The cold desert of Katpana — sand dunes at 2,226 m — defies everything you expect of northern Pakistan. An hour's drive brings you to the serenity of Upper Kachura Lake, then onward to Shangrila Resort (the "Paradise on Earth" that inspired James Hilton's Shangri-La). Our 8-Day Skardu Expedition covers all of this alongside Deosai National Park — second-highest plateau on Earth and a stronghold for the Himalayan brown bear. Departure from Islamabad or Lahore; jeep-based itinerary with all accommodation included at Rs. 85,000 per person.
+          </p>
+          <div class="card-footer">
+            <a class="card-read-more" href="tour.html#skardu-valley">
+              Read Full Guide
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <span class="card-min">7 min read</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── POST 5 ── -->
+      <article class="blog-card">
+        <div class="card-img-wrap">
+          <img src="pics/swat-valley.jpg" alt="Swat Valley" onerror="this.style.background='linear-gradient(135deg,#2d5a1b,#1a6b45)';this.removeAttribute('src')">
+          <span class="card-tag">Culture & History</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span>February 2025</span>
+            <span>KPK Valleys</span>
+            <span>5 min read</span>
+          </div>
+          <h3 class="card-title">Swat Valley — The Switzerland of Pakistan Explained</h3>
+          <p class="card-excerpt">
+            Long before the Alps became a tourist cliché, Winston Churchill called Swat "a beautiful country." Today Swat Valley — nicknamed the "Switzerland of the East" — has reclaimed its peaceful, prosperous identity with a burst of tourism. Kalam and Mahodand Lake are pure wilderness; Malam Jabba hosts Pakistan's only ski resort; and the ancient Buddhist stupas of Butkara remind visitors that this was once the heart of Gandhara civilization. Our 4-Day Swat Summer Retreat is the ideal introduction: starting from Mingora, the route climbs through emerald pine forests to Kalam, with optional add-ons for white-water rafting and jeep safaris. Priced at Rs. 35,000 per person, it is one of our most popular family packages.
+          </p>
+          <div class="card-footer">
+            <a class="card-read-more" href="tour.html#swat-valley">
+              Read Full Guide
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <span class="card-min">5 min read</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── POST 6 ── -->
+      <article class="blog-card">
+        <div class="card-img-wrap">
+          <img src="pics/neelum-valley.jpg" alt="Neelum Valley" onerror="this.style.background='linear-gradient(135deg,#1a6b45,#0f4d30)';this.removeAttribute('src')">
+          <span class="card-tag">Azad Kashmir</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span>January 2025</span>
+            <span>Azad Kashmir</span>
+            <span>6 min read</span>
+          </div>
+          <h3 class="card-title">Neelum Valley: 200 km of Pristine Kashmir Wilderness</h3>
+          <p class="card-excerpt">
+            Named for the vivid turquoise of its river, Neelum Valley stretches 200 km from Muzaffarabad to Taobat along Pakistan's most scenic river corridor. Arang Kel — a village perched on a mountain ledge reachable only by cable car and a 45-minute hike — is the destination everyone falls in love with first. The valley also hides Sharda, home to one of South Asia's oldest universities (11th century ruins), and the twin lakes of Ratti Gali, accessible in summer. Our 5-Day Neelum Valley Escapade departs from Islamabad, covers all major stops, and is thoughtfully timed to avoid weekend crowds. At Rs. 42,000 per person, it remains one of the best-value itineraries in Pakistan's north.
+          </p>
+          <div class="card-footer">
+            <a class="card-read-more" href="tour.html#neelum-valley">
+              Read Full Guide
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <span class="card-min">6 min read</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── POST 7 ── -->
+      <article class="blog-card">
+        <div class="card-img-wrap">
+          <img src="pics/kalash-valley.jpg" alt="Kalash Valley" onerror="this.style.background='linear-gradient(135deg,#7b3f00,#c9933a)';this.removeAttribute('src')">
+          <span class="card-tag">Culture & Festivals</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span>December 2024</span>
+            <span>Chitral</span>
+            <span>5 min read</span>
+          </div>
+          <h3 class="card-title">Kalash Valley: Meet Pakistan's Most Ancient Living Culture</h3>
+          <p class="card-excerpt">
+            The Kalash people are one of South Asia's last remaining pre-Islamic communities, numbering around 3,000 in three remote valleys near Chitral. Their Chilam Joshi spring festival (May) — a riot of colour, music, and traditional dance — is one of the most extraordinary cultural events you can witness anywhere in South Asia. Wooden temples, animist shrines, and intricately embroidered headgear make every lane of Bumburet a living museum. Our Kalash Valley Chitral itinerary is available year-round but we strongly recommend aligning your visit with one of the three major festivals: Joshi (May), Uchaw (August), or Chaumos (December) for an experience that transcends ordinary travel.
+          </p>
+          <div class="card-footer">
+            <a class="card-read-more" href="tour.html#kalash-valley">
+              Read Full Guide
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <span class="card-min">5 min read</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── POST 8 ── -->
+      <article class="blog-card">
+        <div class="card-img-wrap">
+          <img src="pics/kumrat-valley.jpg" alt="Kumrat Valley" onerror="this.style.background='linear-gradient(135deg,#2d5a1b,#4a8c2a)';this.removeAttribute('src')">
+          <span class="card-tag">Hidden Gem</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span>November 2024</span>
+            <span>KPK Valleys</span>
+            <span>4 min read</span>
+          </div>
+          <h3 class="card-title">Kumrat Valley: KPK's Best-Kept Secret Is Out</h3>
+          <p class="card-excerpt">
+            While Swat and Naran attract the summer crowds, Kumrat Valley in Dir Kohistan remains gloriously uncrowded. Dense deodara cedar forests — some of the thickest in Pakistan — line the Panjkora River gorge, and the Do Kala waterfall is a short trek from the main road. The local Kohistani culture is warm and welcoming to respectful visitors. Kumrat is best reached by jeep from Timergara; roads improve each season. We are one of the few tour operators that currently includes Kumrat in a structured, guided package — contact us to build your custom itinerary and discover this valley before the rest of the world does.
+          </p>
+          <div class="card-footer">
+            <a class="card-read-more" href="tour.html#kumrat-valley">
+              Read Full Guide
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <span class="card-min">4 min read</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── POST 9 ── -->
+      <article class="blog-card">
+        <div class="card-img-wrap">
+          <img src="pics/Fairy Meadows Skardu Excursion.jpg" alt="K2 Base Camp" onerror="this.style.background='linear-gradient(135deg,#1c3a5e,#0f3d26)';this.removeAttribute('src')">
+          <span class="card-tag">Trekking</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span>October 2024</span>
+            <span>Karakoram</span>
+            <span>9 min read</span>
+          </div>
+          <h3 class="card-title">K2 Base Camp Trek: What You Need to Know Before You Go</h3>
+          <p class="card-excerpt">
+            At 8,611 metres, K2 is the second-highest — and widely considered the most technically dangerous — mountain on Earth. Its base camp at Concordia (4,600 m) is the trekking world's greatest arena, where five of the world's fourteen 8,000-metre peaks crowd the horizon simultaneously. The route from Skardu takes 10 to 14 days on foot through the Baltoro Glacier. Serious fitness, proper acclimatization, and experienced local guides are non-negotiable. Our K2 Base Camp package includes all permits, porters, camping gear, a high-altitude cook, and emergency satellite communication. This is an expedition, not a holiday — but those who complete it describe it as a life-defining experience. Minimum fitness: strong hiker with previous multi-day trekking experience at altitude.
+          </p>
+          <div class="card-footer">
+            <a class="card-read-more" href="tour.html#k2">
+              Read Full Guide
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <span class="card-min">9 min read</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── POST 10 ── -->
+      <article class="blog-card">
+        <div class="card-img-wrap">
+          <img src="pics/umbrella-waterfall.jpg" alt="Umbrella Waterfall" onerror="this.style.background='linear-gradient(135deg,#1a6b45,#2d7a55)';this.removeAttribute('src')">
+          <span class="card-tag">Day Trip</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span>September 2024</span>
+            <span>Islamabad</span>
+            <span>3 min read</span>
+          </div>
+          <h3 class="card-title">Umbrella Waterfall: Islamabad's Perfect Weekend Escape</h3>
+          <p class="card-excerpt">
+            Not every great adventure requires a week off work. The Umbrella Waterfall — also known as Saidpur Waterfall for its proximity to Saidpur Village — cascades in a distinctive umbrella arc through lush Margalla Hills just 45 minutes from Islamabad's Centaurus. The trail is accessible year-round and takes around 30 minutes on foot from the drop-off point. Spring (March–May) is the most rewarding season when the surrounding hillside is thick with blossom. We offer guided day-trip and overnight camping packages from the twin cities, perfect for corporate groups, families, and solo hikers who want a quick nature reset without a long drive north.
+          </p>
+          <div class="card-footer">
+            <a class="card-read-more" href="tour.html#umbrella-waterfall">
+              Read Full Guide
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <span class="card-min">3 min read</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── POST 11 ── -->
+      <article class="blog-card">
+        <div class="card-img-wrap">
+          <img src="pics/shogran-valley.jpg" alt="Shogran Valley" onerror="this.style.background='linear-gradient(135deg,#3b6e20,#1a6b45)';this.removeAttribute('src')">
+          <span class="card-tag">Travel Tips</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span>August 2024</span>
+            <span>KPK Valleys</span>
+            <span>5 min read</span>
+          </div>
+          <h3 class="card-title">Shogran Valley: The Himalayan Plateau with a 360° View</h3>
+          <p class="card-excerpt">
+            At 2,362 metres, Shogran is a broad, grassy plateau that delivers what few spots in Pakistan can: a 360-degree panorama of snow-capped peaks including Makra, Musa Ka Musalla, and the greater Mansehra range. The plateau is just a 4-hour drive from Islamabad, making it one of the easiest high-altitude escapes from the capital. The base camp for Musa Ka Musalla (3,969 m) trek starts here, but you do not need to hike to appreciate Shogran — the views from the plateau itself are reason enough to visit. Our packages include comfortable wooden hut accommodation, bonfires, and guided nature walks. Best season: April to October; snow possible November to March.
+          </p>
+          <div class="card-footer">
+            <a class="card-read-more" href="tour.html#shogran-valley">
+              Read Full Guide
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <span class="card-min">5 min read</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- ── POST 12 ── -->
+      <article class="blog-card">
+        <div class="card-img-wrap">
+          <img src="pics/Astore-valley.jpg" alt="Astore Valley" onerror="this.style.background='linear-gradient(135deg,#1c3a5e,#1a6b45)';this.removeAttribute('src')">
+          <span class="card-tag">Trekking & Nature</span>
+        </div>
+        <div class="card-body">
+          <div class="card-meta">
+            <span>July 2024</span>
+            <span>Gilgit-Baltistan</span>
+            <span>6 min read</span>
+          </div>
+          <h3 class="card-title">Astore Valley: Gilgit-Baltistan's Undiscovered Highland Paradise</h3>
+          <p class="card-excerpt">
+            While its neighbours Hunza and Skardu garner most of the spotlight, Astore Valley quietly delivers some of the finest mountain scenery in Gilgit-Baltistan without the crowds. Glacial rivers braid through meadows of wild iris; Nanga Parbat towers on the south-western horizon. The drive from Astore town to Rama Lake is a journey through pine forest and rocky canyon that photographers struggle to stop documenting. Rama Meadow (3,200 m) is perfect for camping — facilities are simple but the setting is extraordinary. Our Astore Valley packages depart from Gilgit and can be combined with a Fairy Meadows extension for a comprehensive Nanga Parbat circuit.
+          </p>
+          <div class="card-footer">
+            <a class="card-read-more" href="tour.html#astore-valley">
+              Read Full Guide
+              <svg viewBox="0 0 24 24" fill="none" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+            </a>
+            <span class="card-min">6 min read</span>
+          </div>
+        </div>
+      </article>
+
+    </div><!-- /blog-grid -->
+  </section>
+
+  <!-- ── NEWSLETTER ── -->
+  <section class="blog-newsletter">
+    <h2>Get Our Travel Guides in Your Inbox</h2>
+    <p>Monthly destination deep-dives, packing lists, and early-bird package offers — straight to you.</p>
+    <div class="nl-form">
+      <input type="email" placeholder="your@email.com" aria-label="Email address">
+      <button type="button">Subscribe Free</button>
     </div>
   </section>
- <footer>
+
+  <!-- ── FOOTER ── -->
+  <footer>
     <h4>Contact Info</h4>
-    <p>Lorem ipsum dolor sit amet consectetur, adipisicing elit. Ipsa, illum.</p>
-    <p>&copy; 2023 pakistanroadtrips.pk All Rights Reserved.</p>
+    <p>📍 Rawalpindi / Islamabad, Pakistan</p>
+    <p>📞 03199819952 &nbsp;|&nbsp; ✉️ pakistan.road.trip1@gmail.com</p>
+    <p>&copy; 2025 pakistanroadtrips.pk — All Rights Reserved.</p>
   </footer>
+
+  <script src="script.js"></script>
+
+  <script>
+    /* Filter chips — client-side show/hide */
+    const chips  = document.querySelectorAll('.filter-chip');
+    const cards  = document.querySelectorAll('.blog-card');
+
+    const tagMap = {
+      'All Posts': null,
+      'Hunza & Gilgit-Baltistan': ['hunza','gilgit-baltistan','skardu','fairy meadows','astore'],
+      'KPK Valleys': ['kpk','swat','naran kaghan','shogran','kumrat'],
+      'Azad Kashmir': ['azad kashmir','neelum'],
+      'Trekking & Adventure': ['trekking','k2','adventure','trek'],
+      'Travel Tips': ['travel tips','day trip'],
+    };
+
+    chips.forEach(chip => {
+      chip.addEventListener('click', () => {
+        chips.forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+        const label = chip.textContent.trim();
+        const keywords = tagMap[label];
+        cards.forEach(card => {
+          if (!keywords) {
+            card.style.display = '';
+            return;
+          }
+          const text = card.textContent.toLowerCase();
+          card.style.display = keywords.some(k => text.includes(k)) ? '' : 'none';
+        });
+      });
+    });
+  </script>
+
 </body>
-<script src="script.js">
-</script>
 </html>

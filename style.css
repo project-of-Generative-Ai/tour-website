@@ -81,6 +81,18 @@ body {
   letter-spacing: 0.5px;
 }
 
+.top-bar a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+  transition: opacity 0.2s;
+}
+
+.top-bar a:hover {
+  opacity: 0.9;
+  text-decoration: underline;
+}
+
 /* Navbar (Glassmorphism) */
 header {
   position: sticky;
@@ -100,14 +112,16 @@ header {
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
 
-nav h1 {
+nav h1,
+nav .logo {
   font-size: 1.5rem;
   font-weight: 700;
   margin: 0;
   letter-spacing: -0.5px;
 }
 
-nav h1 a {
+nav h1 a,
+nav .logo {
   color: #fff;
   text-decoration: none;
   background: linear-gradient(45deg, #fff, var(--primary-color));
@@ -117,7 +131,8 @@ nav h1 a {
   transition: var(--transition-smooth);
 }
 
-nav h1 a:hover {
+nav h1 a:hover,
+nav .logo:hover {
   filter: brightness(1.2);
 }
 
