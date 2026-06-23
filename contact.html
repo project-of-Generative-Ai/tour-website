@@ -52,8 +52,16 @@
 
         .info-card,
         .hours-card,
-        .form-card {
+        .form-card
+        .whatsapp-card {
             background: var(--contact-card-bg);
+            border: 1px solid var(--contact-border);
+            border-radius: var(--radius-md);
+            padding: 20px 22px;
+            transition: box-shadow 0.2s ease;
+        }
+        .whatsapp-card{
+             background: var(--contact-card-bg);
             border: 1px solid var(--contact-border);
             border-radius: var(--radius-md);
             padding: 20px 22px;
@@ -78,16 +86,21 @@
             font-size: 17px;
             flex-shrink: 0;
         }
+    
 
         .wa-title {
             font-size: 1rem;
             font-weight: 700;
             margin-bottom: 4px;
+            text-decoration: none;
+            text-decoration-color: var(--primary-color);
         }
 
         .wa-sub {
             font-size: 0.94rem;
             opacity: 0.95;
+            text-decoration: none;
+            text-decoration-color: var(--primary-color);
         }
 
         .hours-card,
@@ -158,7 +171,10 @@
             background: rgba(16, 185, 129, 0.12);
             border: 1px solid rgba(16, 185, 129, 0.24);
         }
-
+        .form-group.Tour-Packages{
+background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.24);
+        }
         .success-msg i,
         .success-msg h3 {
             color: var(--primary-color);
@@ -186,6 +202,14 @@
             .form-card {
                 padding: 24px 20px;
             }
+        }
+        .Tour-Packages{
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.24);
+        }
+        .destinations{
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.24);
         }
     </style>
 </head>
@@ -332,7 +356,7 @@
                     <label for="tour">Interested Tour (optional)</label>
                     <select id="tour" name="tour">
                         <option value="">— Select a destination or package —</option>
-                        <optgroup label="Tour Packages">
+                        <optgroup label="Tour-Packages">
                             <option>Hunza Autumn Tour — 7 Days / Rs. 65,000</option>
                             <option>Fairy Meadows Adventure — 5 Days / Rs. 45,000</option>
                             <option>Skardu Expedition — 8 Days / Rs. 85,000</option>
@@ -392,7 +416,7 @@
 
     <script>
         // ── Form validation & n8n webhook submission ──
-        const N8N_WEBHOOK_URL = 'YOUR_N8N_WEBHOOK_URL_HERE'; // <-- paste your n8n webhook URL here
+        const N8N_WEBHOOK_URL = 'olvks58qqj7vhontdltkfw4b6bay4mo5@hook.eu1.make.com'; // <-- paste your n8n webhook URL here
 
         const form = document.getElementById('contactForm');
         const btn = document.getElementById('submitBtn');
