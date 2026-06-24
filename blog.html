@@ -313,7 +313,7 @@
 
     .nl-form input:focus {
       border-color: var(--gold);
-      box-shadow: 0 0 0 3px rgba(212,160,51,0.18);
+      box-shadow: 0 0 0 3px rgba(212, 160, 51, 0.18);
     }
 
     .nl-form button {
@@ -353,12 +353,12 @@
       border-radius: 12px;
       font-size: 0.95rem;
       font-family: inherit;
-      box-shadow: 0 8px 32px rgba(0,0,0,0.35);
+      box-shadow: 0 8px 32px rgba(0, 0, 0, 0.35);
       z-index: 9999;
       display: flex;
       align-items: center;
       gap: 10px;
-      transition: transform 0.4s cubic-bezier(0.34,1.56,0.64,1), opacity 0.3s;
+      transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.3s;
       opacity: 0;
       pointer-events: none;
     }
@@ -368,8 +368,13 @@
       opacity: 1;
     }
 
-    #nl-toast.success { border-left: 4px solid #22c55e; }
-    #nl-toast.error   { border-left: 4px solid #ef4444; }
+    #nl-toast.success {
+      border-left: 4px solid #22c55e;
+    }
+
+    #nl-toast.error {
+      border-left: 4px solid #ef4444;
+    }
 
     /* ── Responsive ── */
     @media (max-width: 768px) {
@@ -400,23 +405,23 @@
     <div class="top-bar">
       <span>pakistan.road.trip1@gmail.com | 03199819952</span>
     </div>
-    <nav  class="navbar">
+    <nav class="navbar">
       <h1><a href="index.html">Pakistan Road Trips</a></h1>
 
       <!-- Hamburger Menu Button -->
       <div class="menu-toggle" id="menu-toggle" aria-expanded="false"></div>>
-    <ul class="nav-links" id="nav-links">
-      <li><a href="index.html">Home</a></li>
-      <li><a href="activity.html">Activity</a></li>
-      <li class="has-dropdown">
-        <a href="tour.html">Tours</a>
-        
-      </li>
-      <li><a href="packages.html">Tour Packages</a></li>
-      <li><a href="blog.html">Blog</a></li>
-      <li><a href="confirm-payment.html">Confirm Payment</a></li>
-      <li><a href="contact.html">Contact Us</a></li>
-    </ul>
+      <ul class="nav-links" id="nav-links">
+        <li><a href="index.html">Home</a></li>
+        <li><a href="activity.html">Activity</a></li>
+        <li class="has-dropdown">
+          <a href="tour.html">Tours</a>
+
+        </li>
+        <li><a href="packages.html">Tour Packages</a></li>
+        <li><a href="blog.html">Blog</a></li>
+        <li><a href="confirm-payment.html">Confirm Payment</a></li>
+        <li><a href="contact.html">Contact Us</a></li>
+      </ul>
     </nav>
   </header>
 
@@ -876,10 +881,11 @@
   <!-- ── NEWSLETTER ── -->
   <section class="blog-newsletter">
     <h2>Get Our Travel Guides in Your Inbox</h2>
-    <p>Weekly blog highlights, destination deep-dives, packing lists, and early-bird package offers — straight to your inbox every week.</p>
+    <p>Weekly blog highlights, destination deep-dives, packing lists, and early-bird package offers — straight to your
+      inbox every week.</p>
     <div class="nl-form">
-      <input type="text"  id="nl-name"  placeholder="Your name"        aria-label="Your full name">
-      <input type="email" id="nl-email" placeholder="your@email.com"   aria-label="Email address">
+      <input type="text" id="nl-name" placeholder="Your name" aria-label="Your full name">
+      <input type="email" id="nl-email" placeholder="your@email.com" aria-label="Email address">
       <button type="button" id="nl-subscribe-btn" onclick="handleNewsletterSubscribe()">Subscribe Free</button>
     </div>
   </section>
@@ -931,7 +937,7 @@
 
   <!-- ── NEWSLETTER WEBHOOK ── -->
   <script>
-    const NL_WEBHOOK = 'https://hook.eu1.make.com/wvessaykyxxxsxds356bnp31856tx7k0';
+    const NL_WEBHOOK = 'https://hook.eu1.make.com/t9c7kwvk43lzyagtpugl3mdhjtdr5fsa';
 
     function showToast(message, type) {
       const toast = document.getElementById('nl-toast');
@@ -948,11 +954,11 @@
     }
 
     async function handleNewsletterSubscribe() {
-      const nameEl  = document.getElementById('nl-name');
+      const nameEl = document.getElementById('nl-name');
       const emailEl = document.getElementById('nl-email');
-      const btn     = document.getElementById('nl-subscribe-btn');
+      const btn = document.getElementById('nl-subscribe-btn');
 
-      const name  = nameEl.value.trim();
+      const name = nameEl.value.trim();
       const email = emailEl.value.trim();
 
       // Basic validation
@@ -972,22 +978,22 @@
 
       try {
         const payload = {
-          name        : name,
-          email       : email,
-          source      : 'blog_newsletter',
+          name: name,
+          email: email,
+          source: 'blog_newsletter',
           subscribed_at: new Date().toISOString(),
-          frequency   : 'weekly'
+          frequency: 'weekly'
         };
 
         const res = await fetch(NL_WEBHOOK, {
-          method : 'POST',
+          method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body   : JSON.stringify(payload)
+          body: JSON.stringify(payload)
         });
 
         if (res.ok) {
           showToast('🎉 Subscribed! Check your inbox every week for new blogs.', 'success');
-          nameEl.value  = '';
+          nameEl.value = '';
           emailEl.value = '';
           btn.textContent = '✔ Subscribed!';
           setTimeout(() => { btn.textContent = 'Subscribe Free'; btn.disabled = false; }, 3500);

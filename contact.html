@@ -92,6 +92,7 @@
             font-size: 1rem;
             font-weight: 700;
             margin-bottom: 4px;
+            color: #fff;
             text-decoration: none;
             text-decoration-color: var(--primary-color);
         }
@@ -141,10 +142,20 @@
         }
 
         input,
-        select,
         textarea {
             color: var(--text-main);
             border: 1.5px solid var(--contact-border);
+        }
+
+        select {
+            color: #000;
+            border: 1.5px solid var(--contact-border);
+        }
+
+        select option,
+        select optgroup {
+            color: #000;
+            background: #fff;
         }
 
         .phone-prefix,
