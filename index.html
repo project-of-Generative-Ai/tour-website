@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -82,6 +82,135 @@
       font-size: 1rem;
       flex-shrink: 0;
     }
+    /* ── Search Results Panel ── */
+    #search-results {
+      display: none;
+      position: absolute;
+      top: calc(100% + 16px);
+      left: 0;
+      right: 0;
+      background: rgba(10, 18, 36, 0.97);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 18px;
+      box-shadow: 0 24px 60px rgba(0,0,0,0.6);
+      padding: 20px;
+      z-index: 500;
+      max-height: 72vh;
+      overflow-y: auto;
+      animation: fadeDown 0.25s ease;
+    }
+
+    #search-results.visible { display: block; }
+
+    #search-results .sr-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+
+    #search-results .sr-header h3 {
+      font-size: 0.95rem;
+      color: #10b981;
+      font-weight: 600;
+    }
+
+    #search-results .sr-close {
+      background: none;
+      border: none;
+      color: #94a3b8;
+      font-size: 1.2rem;
+      cursor: pointer;
+      padding: 4px 8px;
+      border-radius: 6px;
+      line-height: 1;
+      transition: color 0.2s;
+    }
+
+    #search-results .sr-close:hover { color: #fff; }
+
+    .sr-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+      gap: 14px;
+    }
+
+    .sr-card {
+      border-radius: 12px;
+      overflow: hidden;
+      border: 1px solid rgba(255,255,255,0.08);
+      background: rgba(255,255,255,0.04);
+      cursor: pointer;
+      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+      text-decoration: none;
+      display: block;
+    }
+
+    .sr-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.5);
+      border-color: #10b981;
+    }
+
+    .sr-card-img {
+      height: 110px;
+      background-size: cover;
+      background-position: center;
+      position: relative;
+    }
+
+    .sr-card-img::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 60%);
+    }
+
+    .sr-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      background: #10b981;
+      color: #fff;
+      font-size: 0.68rem;
+      font-weight: 700;
+      padding: 3px 8px;
+      border-radius: 20px;
+      z-index: 1;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    .sr-card-body {
+      padding: 10px 12px 12px;
+    }
+
+    .sr-card-body h4 {
+      font-size: 0.88rem;
+      color: #fff;
+      font-weight: 600;
+      margin-bottom: 4px;
+      line-height: 1.3;
+    }
+
+    .sr-card-body p {
+      font-size: 0.78rem;
+      color: #94a3b8;
+    }
+
+    .sr-no-results {
+      text-align: center;
+      padding: 30px 20px;
+      color: #94a3b8;
+    }
+
+    .sr-no-results .sr-icon { font-size: 2.5rem; margin-bottom: 10px; }
+    .sr-no-results p { font-size: 0.95rem; }
+    .sr-no-results span { color: #fff; font-weight: 600; }
   </style>
 </head>
 
@@ -133,16 +262,28 @@
 
   <section class="hero">
     <h2>Best Vacation Packages</h2>
-    <form id="searchForm">
-      <input type="text" placeholder="Where are you going?" required />
-      <input type="date" required />
-      <select>
-        <option>1 Person</option>
-        <option selected>2 Persons</option>
-        <option>3 Persons</option>
-      </select>
-      <button type="submit">Search</button>
-    </form>
+    <div style="position:relative; max-width:800px; width:100%;">
+      <form id="searchForm">
+        <input type="text" id="searchQuery" placeholder="Where are you going?" autocomplete="off" />
+        <input type="date" id="searchDate" />
+        <select id="searchPersons">
+          <option>1 Person</option>
+          <option selected>2 Persons</option>
+          <option>3 Persons</option>
+          <option>4 Persons</option>
+          <option>5+ Persons</option>
+        </select>
+        <button type="submit">Search</button>
+      </form>
+      <!-- Results panel -->
+      <div id="search-results">
+        <div class="sr-header">
+          <h3 id="sr-title">Results</h3>
+          <button class="sr-close" id="sr-close" aria-label="Close results">&times;</button>
+        </div>
+        <div class="sr-grid" id="sr-grid"></div>
+      </div>
+    </div>
   </section>
 
   <section class="featured">
@@ -246,6 +387,104 @@
 
 </body>
 <script src="script.js">
+</script>
+
+<script>
+  /* ── Tour Search Data ── */
+  const TOURS = [
+    { name: 'Astore Valley',            tags: ['astore','valley','gilgit','baltistan','trekking','nature'],  img: 'pics/Astore-valley.webp',                   link: 'tour.html#astore-valley',            duration: '5–7 Days',   type: 'Destination' },
+    { name: 'Fairy Meadows',            tags: ['fairy','meadows','nanga parbat','basecamp','trekking'],     img: 'pics/Fairy Meadows Hunza Tour.webp',        link: 'tour.html#fairy-meadows',            duration: '4–6 Days',   type: 'Destination' },
+    { name: 'Hunza Valley',             tags: ['hunza','valley','gilgit','karimabad','rakaposhi'],          img: 'pics/Fairy Meadows Hunza Tour.webp',        link: 'tour.html#hunza-valley',             duration: '6–8 Days',   type: 'Destination' },
+    { name: 'K2 Base Camp',             tags: ['k2','base camp','trek','mountaineering','skardu','baltoro'],img: 'pics/Fairy Meadows Skardu Excursion.webp',  link: 'tour.html#k2',                       duration: '14–18 Days', type: 'Trekking'     },
+    { name: 'Kumrat Valley',            tags: ['kumrat','valley','kpk','dir','waterfall','camping'],        img: 'pics/kumrat-valley.webp',                   link: 'tour.html#kumrat-valley',            duration: '3–5 Days',   type: 'Destination' },
+    { name: 'Kalash Valley Chitral',    tags: ['kalash','valley','chitral','culture','festival','kpk'],     img: 'pics/kalash-valley.webp',                   link: 'tour.html#kalash-valley',            duration: '4–6 Days',   type: 'Culture'      },
+    { name: 'Naran Kaghan',             tags: ['naran','kaghan','valley','lake','saif ul malook','kpk'],    img: 'pics/naran-kaghan.webp',                    link: 'tour.html#naran-kaghan',             duration: '3–5 Days',   type: 'Destination' },
+    { name: 'Neelum Valley',            tags: ['neelum','valley','azad kashmir','river','green','kashmir'], img: 'pics/neelum-valley.webp',                   link: 'tour.html#neelum-valley',            duration: '4–6 Days',   type: 'Destination' },
+    { name: 'Skardu Valley',            tags: ['skardu','valley','gilgit','baltistan','lake','desert','cold'],img: 'pics/skardu-valley.webp',                 link: 'tour.html#skardu-valley',            duration: '6–8 Days',   type: 'Destination' },
+    { name: 'Shogran Valley',           tags: ['shogran','valley','kpk','hill station','pine','forest'],    img: 'pics/shogran-valley.webp',                  link: 'tour.html#shogran-valley',           duration: '2–4 Days',   type: 'Destination' },
+    { name: 'Swat Valley',             tags: ['swat','valley','kpk','mingora','history','culture','green'], img: 'pics/swat-valley.webp',                     link: 'tour.html#swat-valley',              duration: '4–6 Days',   type: 'Destination' },
+    { name: 'Umbrella Waterfall',       tags: ['umbrella','waterfall','murree','hike','nature'],             img: 'pics/umbrella-waterfall.webp',              link: 'tour.html#umbrella-waterfall',       duration: '1 Day Trip', type: 'Day Trip'     },
+    { name: 'Hunza Autumn Tour — 7 Days', tags: ['hunza','autumn','7 days','tour','package','gilgit'],      img: 'pics/Fairy Meadows Hunza Tour.webp',        link: 'packages.html',                      duration: '7 Days',     type: 'Package'      },
+    { name: 'Fairy Meadows Adventure — 5 Days', tags: ['fairy','meadows','adventure','5 days','package'],  img: 'pics/Fairy Meadows 5Days Tour.webp',        link: 'packages.html',                      duration: '5 Days',     type: 'Package'      },
+    { name: 'Skardu Expedition — 8 Days', tags: ['skardu','expedition','8 days','package','gilgit'],        img: 'pics/skardu-valley.webp',                   link: 'packages.html',                      duration: '8 Days',     type: 'Package'      },
+    { name: 'Swat Summer Retreat — 4 Days', tags: ['swat','summer','retreat','4 days','package','kpk'],    img: 'pics/swat-valley.webp',                     link: 'packages.html',                      duration: '4 Days',     type: 'Package'      },
+    { name: 'Neelum Valley Escapade — 5 Days', tags: ['neelum','escapade','5 days','package','kashmir'],    img: 'pics/neelum-valley.webp',                   link: 'packages.html',                      duration: '5 Days',     type: 'Package'      },
+    { name: 'Naran Kaghan Classic — 3 Days', tags: ['naran','kaghan','classic','3 days','package','kpk'],  img: 'pics/naran-kaghan.webp',                    link: 'packages.html',                      duration: '3 Days',     type: 'Package'      },
+    { name: 'Fairy Meadows Skardu Excursion', tags: ['fairy','meadows','skardu','excursion','gilgit'],      img: 'pics/Fairy Meadows Skardu Excursion.webp',  link: 'packages.html',                      duration: '10 Days',    type: 'Package'      },
+    { name: '15 Days Chitral Hindukush', tags: ['chitral','hindukush','15 days','kpk','culture','trek'],    img: 'pics/15 Days Chitral Hindukush.webp',       link: 'packages.html',                      duration: '15 Days',    type: 'Package'      },
+    { name: 'Camping in Kaghan Valley', tags: ['camping','kaghan','nature','adventure','kpk','outdoor'],     img: 'pics/camping.webp',                         link: 'packages.html',                      duration: '4 Days',     type: 'Adventure'    },
+    { name: 'Winter Sports Malam Jabba', tags: ['winter','sports','malam jabba','skiing','swat','kpk'],     img: 'pics/wintersports.webp',                    link: 'packages.html',                      duration: '6 Days',     type: 'Adventure'    },
+  ];
+
+  const form      = document.getElementById('searchForm');
+  const queryEl   = document.getElementById('searchQuery');
+  const panel     = document.getElementById('search-results');
+  const grid      = document.getElementById('sr-grid');
+  const srTitle   = document.getElementById('sr-title');
+  const srClose   = document.getElementById('sr-close');
+
+  function searchTours(q) {
+    if (!q) return [];
+    const words = q.toLowerCase().split(/\s+/).filter(Boolean);
+    return TOURS
+      .map(t => {
+        const haystack = (t.name + ' ' + t.tags.join(' ')).toLowerCase();
+        const score = words.reduce((s, w) => s + (haystack.includes(w) ? 1 : 0), 0);
+        return { ...t, score };
+      })
+      .filter(t => t.score > 0)
+      .sort((a, b) => b.score - a.score);
+  }
+
+  function renderResults(results, query) {
+    grid.innerHTML = '';
+    if (results.length === 0) {
+      grid.innerHTML = `
+        <div class="sr-no-results" style="grid-column:1/-1">
+          <div class="sr-icon">🔍</div>
+          <p>No tours found for <span>"${query}"</span>.</p>
+          <p style="margin-top:8px;font-size:0.85rem">Try: Hunza, Skardu, Swat, Fairy Meadows…</p>
+        </div>`;
+    } else {
+      results.forEach(t => {
+        const card = document.createElement('a');
+        card.className = 'sr-card';
+        card.href = t.link;
+        card.innerHTML = `
+          <div class="sr-card-img" style="background-image:url('${t.img}')">
+            <span class="sr-badge">${t.type}</span>
+          </div>
+          <div class="sr-card-body">
+            <h4>${t.name}</h4>
+            <p>${t.duration}</p>
+          </div>`;
+        grid.appendChild(card);
+      });
+    }
+    srTitle.textContent = results.length > 0
+      ? `${results.length} result${results.length > 1 ? 's' : ''} for "${query}"`
+      : `No results for "${query}"`;
+    panel.classList.add('visible');
+  }
+
+  form.addEventListener('submit', e => {
+    e.preventDefault();
+    const q = queryEl.value.trim();
+    if (!q) return;
+    renderResults(searchTours(q), q);
+  });
+
+  srClose.addEventListener('click', () => {
+    panel.classList.remove('visible');
+    queryEl.value = '';
+  });
+
+  // Close panel on outside click
+  document.addEventListener('click', e => {
+    if (!panel.contains(e.target) && e.target !== queryEl && !form.contains(e.target)) {
+      panel.classList.remove('visible');
+    }
+  });
 </script>
 
 </html>
